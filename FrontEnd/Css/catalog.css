@@ -1,0 +1,84 @@
+.grid-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: 0 auto;
+}
+
+.card-item {
+  margin-bottom: 1rem;
+}
+
+.poem {
+  white-space: pre-wrap; /* Позволяет перенос строк */
+  font-size: 1rem; /* Подогнано под общий стиль */
+  font-family: "Georgia", serif; /* Более поэтичный стиль */
+  line-height: 1.4;
+  background: none; /* Убирает дефолтный серый фон */
+  border: none; /* Убирает рамки */
+  margin-top: 1rem;
+  height: 12rem; /* Фиксированная высота для обрезки длинных стихов */
+  overflow: hidden; /* Обрезка текста */
+}
+
+.poem-btn {
+  text-decoration: none;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  display: block;
+  text-align: right;
+}
+
+.poem-btn:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Стили для пагинации */
+.pagination .page-link {
+  color: #333;
+  border-color: #ddd;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #8b5e3c;
+  border-color: #8b5e3c;
+}
+
+.pagination .page-link:hover {
+  background-color: #f0f0f0;
+  color: #8b5e3c;
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 992px) {
+  .grid-card {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 576px) {
+  .grid-card {
+    grid-template-columns: 1fr;
+  }
+}
