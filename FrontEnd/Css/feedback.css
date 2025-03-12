@@ -1,0 +1,259 @@
+/* ==========================================
+   FEEDBACK.CSS
+   - Styles for the feedback page
+   ========================================== */
+
+.feedback-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.feedback-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.feedback-title {
+  font-size: 3.2rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
+}
+
+.feedback-subtitle {
+  font-size: 1.8rem;
+  color: var(--color-text-light);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.feedback-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  justify-content: center;
+}
+
+.feedback-option {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.feedback-option:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.feedback-option.active {
+  border-color: var(--color-primary);
+  background-color: rgba(139, 94, 60, 0.05);
+}
+
+.feedback-option-icon {
+  font-size: 3rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.feedback-option-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.feedback-option-description {
+  font-size: 1.4rem;
+  color: var(--color-text-light);
+}
+
+.feedback-form {
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  font-size: 1.6rem;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  font-size: 1.6rem;
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.2);
+}
+
+.form-text {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+.form-check-input {
+  margin-top: 0;
+}
+
+.form-check-label {
+  font-size: 1.4rem;
+}
+
+.rating-select {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.rating-option {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-muted);
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rating-option:hover,
+.rating-option.active {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.feedback-success {
+  text-align: center;
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--color-success);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.feedback-success-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.feedback-success-title {
+  font-size: 2.4rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.feedback-success-message {
+  font-size: 1.6rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.feedback-faq {
+  margin-top: var(--spacing-xl);
+}
+
+.faq-title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.accordion-item {
+  margin-bottom: var(--spacing-sm);
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+}
+
+.accordion-header {
+  padding: 0;
+}
+
+.accordion-button {
+  padding: var(--spacing-md);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: rgba(139, 94, 60, 0.05);
+  color: var(--color-primary);
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.2);
+}
+
+.accordion-body {
+  padding: var(--spacing-md);
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .feedback-options {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feedback-option {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .feedback-form {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .feedback-title {
+    font-size: 2.8rem;
+  }
+
+  .feedback-subtitle {
+    font-size: 1.6rem;
+  }
+
+  .rating-option {
+    width: 35px;
+    height: 35px;
+  }
+}
