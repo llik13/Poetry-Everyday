@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="Css/base.css" />
     <link rel="stylesheet" href="Css/layout.css" />
+    <link rel="stylesheet" href="Css/catalog.css" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -17,217 +19,6 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <style>
-      /* Catalog specific styles */
-      .catalog-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: var(--spacing-md);
-      }
-
-      .search-filter-section {
-        margin-bottom: var(--spacing-lg);
-        padding: var(--spacing-md);
-        background-color: var(--color-bg-light);
-        border-radius: var(--border-radius-md);
-        box-shadow: var(--shadow-sm);
-      }
-
-      .search-bar {
-        display: flex;
-        margin-bottom: var(--spacing-md);
-      }
-
-      .search-input {
-        flex: 1;
-        padding: var(--spacing-sm);
-        border: 1px solid var(--color-bg-dark);
-        border-right: none;
-        border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
-        font-size: 1.6rem;
-      }
-
-      .search-button {
-        padding: var(--spacing-sm) var(--spacing-md);
-        background-color: var(--color-primary);
-        color: white;
-        border: none;
-        border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .search-button:hover {
-        background-color: var(--color-primary-light);
-      }
-
-      .filter-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--spacing-md);
-      }
-
-      .filter-group {
-        flex: 1;
-        min-width: 200px;
-      }
-
-      .filter-label {
-        display: block;
-        font-size: 1.4rem;
-        margin-bottom: var(--spacing-xs);
-        font-weight: 500;
-      }
-
-      .filter-select {
-        width: 100%;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border: 1px solid var(--color-bg-dark);
-        border-radius: var(--border-radius-sm);
-        font-size: 1.4rem;
-      }
-
-      .filter-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--spacing-xs);
-        margin-top: var(--spacing-sm);
-      }
-
-      .filter-tag {
-        background-color: rgba(139, 94, 60, 0.1);
-        color: var(--color-primary);
-        padding: 0.3rem 0.8rem;
-        border-radius: 2rem;
-        font-size: 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .tag-remove {
-        cursor: pointer;
-        color: var(--color-text-light);
-        font-size: 1rem;
-      }
-
-      .tag-remove:hover {
-        color: var(--color-primary);
-      }
-
-      .grid-card {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: var(--spacing-md);
-        margin: 0 auto;
-      }
-
-      .card-item {
-        margin-bottom: var(--spacing-md);
-      }
-
-      .poem {
-        white-space: pre-wrap;
-        font-size: 1rem;
-        font-family: var(--font-poetry);
-        line-height: 1.4;
-        background: none;
-        border: none;
-        margin-top: var(--spacing-sm);
-        height: 12rem;
-        overflow: hidden;
-      }
-
-      .poem-btn {
-        text-decoration: none;
-        color: var(--color-text-muted);
-        font-style: italic;
-        margin-bottom: 0.5rem;
-        display: block;
-        text-align: right;
-      }
-
-      .poem-btn:hover {
-        color: var(--color-primary);
-        text-decoration: underline;
-      }
-
-      .card {
-        width: 100%;
-        height: 100%;
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-md);
-      }
-
-      .card-title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-
-      .results-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: var(--spacing-md);
-      }
-
-      .results-count {
-        font-size: 1.6rem;
-        color: var(--color-text-light);
-      }
-
-      .sort-options {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-      }
-
-      .sort-label {
-        font-size: 1.4rem;
-        color: var(--color-text-light);
-      }
-
-      .sort-select {
-        padding: 0.3rem 0.8rem;
-        border: 1px solid var(--color-bg-dark);
-        border-radius: var(--border-radius-sm);
-        font-size: 1.4rem;
-      }
-
-      /* Responsive adjustments */
-      @media (max-width: 1200px) {
-        .grid-card {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
-      @media (max-width: 992px) {
-        .grid-card {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (max-width: 576px) {
-        .grid-card {
-          grid-template-columns: 1fr;
-        }
-
-        .filter-row {
-          flex-direction: column;
-        }
-
-        .sort-options {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-      }
-    </style>
   </head>
   <body>
     <header class="header">
@@ -264,11 +55,11 @@
             <label class="filter-label" for="author-filter">Author</label>
             <select class="filter-select" id="author-filter">
               <option value="">All Authors</option>
-              <option value="1">А.С. Пушкин</option>
-              <option value="2">М.Ю. Лермонтов</option>
-              <option value="3">Ф.И. Тютчев</option>
-              <option value="4">А.А. Ахматова</option>
-              <option value="5">С.А. Есенин</option>
+              <option value="1">William Shakespeare</option>
+              <option value="2">John Keats</option>
+              <option value="3">Emily Dickinson</option>
+              <option value="4">Robert Frost</option>
+              <option value="5">Edgar Allan Poe</option>
             </select>
           </div>
 
@@ -288,10 +79,10 @@
             <label class="filter-label" for="time-filter">Time Period</label>
             <select class="filter-select" id="time-filter">
               <option value="">All Periods</option>
+              <option value="16th">16th Century</option>
               <option value="18th">18th Century</option>
               <option value="19th">19th Century</option>
               <option value="20th">20th Century</option>
-              <option value="21st">21st Century</option>
             </select>
           </div>
 
@@ -311,17 +102,16 @@
         <!-- Applied Filters -->
         <div class="filter-tags">
           <div class="filter-tag">
-            А.С. Пушкин <span class="tag-remove">✕</span>
+            William Shakespeare <span class="tag-remove">✕</span>
           </div>
           <div class="filter-tag">
             19th Century <span class="tag-remove">✕</span>
           </div>
           <div class="filter-tag">Love <span class="tag-remove">✕</span></div>
         </div>
-      </div>
 
-      <!-- Results Section -->
-      <div class="results-info">
+        <!-- Results Section -->
+        <div class="results-info">
         <div class="results-count">Showing 12 of 124 poems</div>
 
         <div class="sort-options">
@@ -338,252 +128,182 @@
       </div>
 
       <div class="grid-card">
-        <!-- Row 1 -->
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Тучи</h5>
-              <pre class="card-text poem">
-Тучки небесные, вечные странники!
-Степью лазурною, цепью жемчужною 
-Мчитесь вы, будто как я же, изгнанники 
-С милого севера в сторону южную. 
-
-Кто же вас гонит: судьбы ли решение?
-Зависть ли тайная? злоба ль открытая?
-Или на вас тяготит преступление?
-              </pre>
-              <a href="poem.html?id=1" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">М.Ю. Лермонтов</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Я помню чудное мгновенье</h5>
-              <pre class="card-text poem">
-Я помню чудное мгновенье:
-Передо мной явилась ты,
-Как мимолетное виденье,
-Как гений чистой красоты.
-
-В томленьях грусти безнадежной,
-В тревогах шумной суеты,
-Звучал мне долго голос нежный
-И снились милые черты.
-              </pre>
-              <a href="poem.html?id=2" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">А.С. Пушкин</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Silentium!</h5>
-              <pre class="card-text poem">
-Молчи, скрывайся и таи
-И чувства и мечты свои –
-Пускай в душевной глубине
-Встают и заходят оне
-Безмолвно, как звезды в ночи, –
-Любуйся ими – и молчи.
-
-Как сердцу высказать себя?
-Другому как понять тебя?
-              </pre>
-              <a href="poem.html?id=3" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">Ф.И. Тютчев</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Я вас любил</h5>
-              <pre class="card-text poem">
-Я вас любил: любовь еще, быть может,
-В душе моей угасла не совсем;
-Но пусть она вас больше не тревожит;
-Я не хочу печалить вас ничем.
-Я вас любил безмолвно, безнадежно,
-То робостью, то ревностью томим;
-Я вас любил так искренно, так нежно,
-Как дай вам Бог любимой быть другим.
-              </pre>
-              <a href="poem.html?id=4" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">А.С. Пушкин</h6>
-            </div>
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Осень</h5>
-              <pre class="card-text poem">
-Уж небо осенью дышало,
-Уж реже солнышко блистало,
-Короче становился день,
-Лесов таинственная сень
-С печальным шумом обнажалась,
-Ложился на поля туман,
-Гусей крикливых караван
-Тянулся к югу: приближалась
-Довольно скучная пора.
-              </pre>
-              <a href="poem.html?id=5" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">А.С. Пушкин</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Бородино</h5>
-              <pre class="card-text poem">
-— Скажи-ка, дядя, ведь не даром
-Москва, спаленная пожаром,
-Французу отдана?
-Ведь были ж схватки боевые,
-Да, говорят, еще какие!
-Недаром помнит вся Россия
-Про день Бородина!
-              </pre>
-              <a href="poem.html?id=6" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">М.Ю. Лермонтов</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Весенняя гроза</h5>
-              <pre class="card-text poem">
-Люблю грозу в начале мая,
-Когда весенний, первый гром,
-Как бы резвяся и играя,
-Грохочет в небе голубом.
-
-Гремят раскаты молодые,
-Вот дождик брызнул, пыль летит,
-Повисли перлы дождевые,
-И солнце нити золотит.
-              </pre>
-              <a href="poem.html?id=7" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">Ф.И. Тютчев</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Зимнее утро</h5>
-              <pre class="card-text poem">
-Мороз и солнце; день чудесный!
-Еще ты дремлешь, друг прелестный —
-Пора, красавица, проснись:
-Открой сомкнуты негой взоры
-Навстречу северной Авроры,
-Звездою севера явись!
-              </pre>
-              <a href="poem.html?id=8" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">А.С. Пушкин</h6>
-            </div>
-          </div>
-        </div>
-
-        <!-- Row 3 -->
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Парус</h5>
-              <pre class="card-text poem">
-Белеет парус одинокой
-В тумане моря голубом!..
-Что ищет он в стране далекой?
-Что кинул он в краю родном?..
-
-Играют волны — ветер свищет,
-И мачта гнется и скрыпит...
-Увы! он счастия не ищет
-И не от счастия бежит!
-              </pre>
-              <a href="poem.html?id=9" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">М.Ю. Лермонтов</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Письмо к женщине</h5>
-              <pre class="card-text poem">
-Вы помните,
-Вы всё, конечно, помните,
-Как я стоял,
-Приблизившись к стене,
-Взволнованно ходили вы по комнате
-И что-то резкое
-В лицо бросали мне.
-              </pre>
-              <a href="poem.html?id=10" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">С.А. Есенин</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Мне голос был</h5>
-              <pre class="card-text poem">
-Мне голос был. Он звал утешно,
-Он говорил: «Иди сюда,
-Оставь свой край, глухой и грешный,
-Оставь Россию навсегда.
-
-Я кровь от рук твоих отмою,
-Из сердца выну черный стыд,
-Я новым именем покрою
-Боль поражений и обид».
-              </pre>
-              <a href="poem.html?id=11" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">А.А. Ахматова</h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-item">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Не жалею, не зову, не плачу</h5>
-              <pre class="card-text poem">
-Не жалею, не зову, не плачу,
-Все пройдет, как с белых яблонь дым.
-Увяданья золотом охваченный,
-Я не буду больше молодым.
-
-Ты теперь не так уж будешь биться,
-Сердце, тронутое холодком,
-И страна березового ситца
-Не заманит шляться босиком.
-              </pre>
-              <a href="poem.html?id=12" class="poem-btn">Read all...</a>
-              <h6 class="card-subtitle mb-2 text-muted">С.А. Есенин</h6>
-            </div>
-          </div>
+  <!-- Row 1 -->
+  <div class="card-row">
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Sonnet 18</h5>
+          <pre class="card-text poem">
+Shall I compare thee to a summer's day?  
+Thou art more lovely and more temperate...  
+          </pre>
+          <a href="poem.html?id=1" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">William Shakespeare</h6>
         </div>
       </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Ode to a Nightingale</h5>
+          <pre class="card-text poem">
+My heart aches, and a drowsy numbness pains  
+My sense, as though of hemlock I had drunk...  
+          </pre>
+          <a href="poem.html?id=2" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">John Keats</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Because I Could Not Stop for Death</h5>
+          <pre class="card-text poem">
+Because I could not stop for Death –  
+He kindly stopped for me...  
+          </pre>
+          <a href="poem.html?id=3" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Emily Dickinson</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">The Road Not Taken</h5>
+          <pre class="card-text poem">
+Two roads diverged in a yellow wood,  
+And sorry I could not travel both...  
+          </pre>
+          <a href="poem.html?id=4" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Robert Frost</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="card-row">
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">The Raven</h5>
+          <pre class="card-text poem">
+Once upon a midnight dreary, while I pondered, weak and weary...  
+          </pre>
+          <a href="poem.html?id=5" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Edgar Allan Poe</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Ode on a Grecian Urn</h5>
+          <pre class="card-text poem">
+Thou still unravish'd bride of quietness,  
+Thou foster-child of Silence and slow Time...  
+          </pre>
+          <a href="poem.html?id=6" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">John Keats</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">She Walks in Beauty</h5>
+          <pre class="card-text poem">
+She walks in beauty, like the night  
+Of cloudless climes and starry skies...  
+          </pre>
+          <a href="poem.html?id=7" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Lord Byron</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">I Hear America Singing</h5>
+          <pre class="card-text poem">
+I hear America singing, the varied carols I hear...  
+          </pre>
+          <a href="poem.html?id=8" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Walt Whitman</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3 -->
+  <div class="card-row">
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">The Tyger</h5>
+          <pre class="card-text poem">
+Tyger Tyger, burning bright,  
+In the forests of the night...  
+          </pre>
+          <a href="poem.html?id=9" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">William Blake</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">If—</h5>
+          <pre class="card-text poem">
+If you can keep your head when all about you  
+Are losing theirs and blaming it on you...  
+          </pre>
+          <a href="poem.html?id=10" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Rudyard Kipling</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Do Not Go Gentle into That Good Night</h5>
+          <pre class="card-text poem">
+Do not go gentle into that good night,  
+Old age should burn and rave at close of day...  
+          </pre>
+          <a href="poem.html?id=11" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Dylan Thomas</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">A Dream Within a Dream</h5>
+          <pre class="card-text poem">
+All that we see or seem  
+Is but a dream within a dream...  
+          </pre>
+          <a href="poem.html?id=12" class="poem-btn">Read all...</a>
+          <h6 class="card-subtitle text-muted">Edgar Allan Poe</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <!-- Pagination -->
       <nav aria-label="Poem catalog pagination" class="my-4">

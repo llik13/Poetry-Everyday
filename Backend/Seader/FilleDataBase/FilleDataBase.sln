@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoetryDB", "PoetryDB.csproj", "{9C66C5E9-0D9D-4E9A-B052-69B367FCC143}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbPedia", "..\dbPedia\dbPedia.csproj", "{F64C5509-FF06-4C3B-913F-A97310D8AF0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvConvertor", "..\CsvConvertor\CsvConvertor.csproj", "{33CBBDF2-82A3-4856-B800-AF9BEAE6F558}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C66C5E9-0D9D-4E9A-B052-69B367FCC143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C66C5E9-0D9D-4E9A-B052-69B367FCC143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C66C5E9-0D9D-4E9A-B052-69B367FCC143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C66C5E9-0D9D-4E9A-B052-69B367FCC143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F64C5509-FF06-4C3B-913F-A97310D8AF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F64C5509-FF06-4C3B-913F-A97310D8AF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F64C5509-FF06-4C3B-913F-A97310D8AF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F64C5509-FF06-4C3B-913F-A97310D8AF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CBBDF2-82A3-4856-B800-AF9BEAE6F558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CBBDF2-82A3-4856-B800-AF9BEAE6F558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CBBDF2-82A3-4856-B800-AF9BEAE6F558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CBBDF2-82A3-4856-B800-AF9BEAE6F558}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD7D6AB8-FEE2-4C8F-A51D-5F5E9EA653F4}
+	EndGlobalSection
+EndGlobal
