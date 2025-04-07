@@ -1,0 +1,15 @@
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\bin\Debug\net8.0\DAL.User.deps.json
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\bin\Debug\net8.0\DAL.User.runtimeconfig.json
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\bin\Debug\net8.0\DAL.User.dll
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\bin\Debug\net8.0\DAL.User.pdb
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.csproj.AssemblyReference.cache
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.GeneratedMSBuildEditorConfig.editorconfig
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.AssemblyInfoInputs.cache
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.AssemblyInfo.cs
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.csproj.CoreCompileInputs.cache
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.sourcelink.json
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.dll
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\refint\DAL.User.dll
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.pdb
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\DAL.User.genruntimeconfig.cache
+D:\Desktop\Курсова\Backend\micro servises\Poetry\DAL.User\obj\Debug\net8.0\ref\DAL.User.dll
