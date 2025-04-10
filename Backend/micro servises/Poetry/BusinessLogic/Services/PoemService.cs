@@ -2,17 +2,14 @@
 using BusinessLogic.Interfaces;
 using DataAccess.Entities;
 using DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging; 
 
 namespace BusinessLogic.Services
 {
     public class PoemService : IPoemService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PoemService> _logger;
 
         public PoemService(IUnitOfWork unitOfWork)
         {
@@ -203,17 +200,24 @@ namespace BusinessLogic.Services
                 Content = poemDto.Content,
                 AuthorId = poemDto.AuthorId,
                 AuthorName = poemDto.AuthorName,
-                IsPublished = poemDto.IsPublished,
+                IsPublished = false,
                 Statistics = new PoemStatistics
                 {
                     ViewCount = 0,
                     LikeCount = 0,
                     CommentCount = 0,
                     SaveCount = 0
-                }
+                },
+                Tags = new List<Tag>(),
+                Categories = new List<Category>(),
+                Versions = new List<PoemVersion>()
             };
 
-            // Add tags
+            // Save poem first to get an ID
+            await _unitOfWork.Poems.AddAsync(poem);
+            await _unitOfWork.CompleteAsync();
+
+            // Now handle tags
             if (poemDto.Tags != null && poemDto.Tags.Any())
             {
                 foreach (var tagName in poemDto.Tags)
@@ -223,12 +227,14 @@ namespace BusinessLogic.Services
                     {
                         tag = new Tag { Name = tagName };
                         await _unitOfWork.Tags.AddAsync(tag);
+                        await _unitOfWork.CompleteAsync(); // Save each tag immediately
                     }
+
                     poem.Tags.Add(tag);
                 }
             }
 
-            // Add categories
+            // Handle categories
             if (poemDto.Categories != null && poemDto.Categories.Any())
             {
                 foreach (var categoryName in poemDto.Categories)
@@ -236,9 +242,11 @@ namespace BusinessLogic.Services
                     var category = await _unitOfWork.Categories.GetCategoryByNameAsync(categoryName);
                     if (category == null)
                     {
-                        category = new Category { Name = categoryName };
+                        category = new Category { Name = categoryName, Description = "" };
                         await _unitOfWork.Categories.AddAsync(category);
+                        await _unitOfWork.CompleteAsync(); // Save each category immediately
                     }
+
                     poem.Categories.Add(category);
                 }
             }
@@ -246,15 +254,29 @@ namespace BusinessLogic.Services
             // Add initial version
             var initialVersion = new PoemVersion
             {
+                PoemId = poem.Id, // Set the explicit foreign key
                 Content = poemDto.Content,
                 VersionNumber = 1,
                 ChangeNotes = "Initial version"
             };
-            poem.Versions.Add(initialVersion);
 
-            // Save poem
-            await _unitOfWork.Poems.AddAsync(poem);
-            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.PoemVersions.AddAsync(initialVersion);
+
+            // Save all changes
+            try
+            {
+                await _unitOfWork.CompleteAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the inner exception details
+                while (ex != null)
+                {
+                    _logger.LogError($"Error: {ex.Message}");
+                    ex = ex.InnerException;
+                }
+                throw;
+            }
 
             // Return DTO
             return new PoemDto
@@ -292,7 +314,7 @@ namespace BusinessLogic.Services
             }
 
             // Create a new version
-            var versionNumber = poem.Versions.Max(v => v.VersionNumber) + 1;
+            var versionNumber = poem.Versions.Count() + 1;
             var newVersion = new PoemVersion
             {
                 PoemId = poem.Id,

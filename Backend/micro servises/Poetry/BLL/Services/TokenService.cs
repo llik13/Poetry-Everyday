@@ -24,10 +24,12 @@ namespace BLL.User.Services
 
         public TokenService(
             IConfiguration configuration,
-            IRefreshTokenRepository refreshTokenRepository)
+            IRefreshTokenRepository refreshTokenRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _configuration = configuration;
             _refreshTokenRepository = refreshTokenRepository;
+            _userManager = userManager;
         }
 
         public string GenerateAccessToken(ApplicationUser user)

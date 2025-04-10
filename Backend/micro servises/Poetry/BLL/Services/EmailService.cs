@@ -21,14 +21,14 @@ namespace BLL.User.Services
 
         public async Task<bool> SendVerificationEmailAsync(string email, string token, string userId)
         {
-            var link = $"{_configuration["AppUrl"]}/verify-email?userId={userId}&token={Uri.EscapeDataString(token)}";
+            var link = $"{_configuration["AppUrl"]}/api/identity/verify-email?userId={userId}&token={Uri.EscapeDataString(token)}";
             var body = $"<p>Привет! Подтверди свою почту, перейдя по <a href=\"{link}\">ссылке</a>.</p>";
             return await _emailSender.SendEmailAsync(email, "Подтверждение почты", body);
         }
 
         public async Task<bool> SendPasswordResetEmailAsync(string email, string token)
         {
-            var link = $"{_configuration["AppUrl"]}/reset-password?token={token}&email={email}";
+            var link = $"{_configuration["AppUrl"]}/api/identity/reset-password?token={token}&email={email}";
             var body = $"<p>Для сброса пароля нажми <a href=\"{link}\">сюда</a>.</p>";
             return await _emailSender.SendEmailAsync(email, "Сброс пароля", body);
         }

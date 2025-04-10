@@ -43,12 +43,7 @@ namespace DataAccess.Context
                 .HasMany(p => p.Categories)
                 .WithMany(c => c.Poems);
 
-            // Soft delete filter
-            modelBuilder.Entity<Poem>().HasQueryFilter(p => !p.IsDeleted);
-            modelBuilder.Entity<Tag>().HasQueryFilter(t => !t.IsDeleted);
-            modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsDeleted);
-            modelBuilder.Entity<Comment>().HasQueryFilter(c => !c.IsDeleted);
-            modelBuilder.Entity<Collection>().HasQueryFilter(c => !c.IsDeleted);
+            
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

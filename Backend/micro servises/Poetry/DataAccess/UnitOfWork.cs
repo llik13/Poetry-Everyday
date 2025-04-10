@@ -20,16 +20,16 @@ namespace DataAccess
 
         public UnitOfWork(
             PoetryDbContext context,
-            PoemRepository poemRepository,
-            TagRepository tagRepository,
-            CategoryRepository categoryRepository,
-            CommentRepository commentRepository,
-            CollectionRepository collectionRepository,
-            LikeRepository likeRepository,
-            PoemVersionRepository poemVersionRepository,
-            SavedPoemRepository savedPoemRepository,
-            PoemNotificationRepository poemNotificationRepository
-            )
+            IPoemRepository poemRepository,
+            ITagRepository tagRepository,
+            ICategoryRepository categoryRepository,
+            ICommentRepository commentRepository,
+            ICollectionRepository collectionRepository,
+            ILikeRepository likeRepository,
+            IPoemVersionRepository poemVersionRepository,
+            ISavedPoemRepository savedPoemRepository,
+            IPoemNotificationRepository poemNotificationRepository
+)
         {
             _context = context;
             Poems = poemRepository;
@@ -42,6 +42,7 @@ namespace DataAccess
             SavedPoems = savedPoemRepository;
             Notifications = poemNotificationRepository;
         }
+
 
         public async Task<int> CompleteAsync()
         {
