@@ -9,7 +9,7 @@ namespace DataAccess.Interfaces
         Task<IEnumerable<Poem>> GetPoemsByTagsAsync(List<string> tagNames);
         Task<IEnumerable<Poem>> GetPoemsByCategoryAsync(string categoryName);
         Task<Poem> GetPoemWithDetailsAsync(Guid id);
-        Task<(IEnumerable<Poem> Poems, int TotalCount)> SearchPoemsAsync(string searchTerm, int pageNumber, int pageSize, string sortBy, bool sortDescending);
+        Task<(IEnumerable<Poem> Poems, int TotalCount)> SearchPoemsAsync(string searchTerm, int pageNumber, int pageSize, string sortBy, bool sortDescending, bool isPublihed);
         Task<int> GetTotalPoemsCountAsync(string searchTerm);
     }
 }

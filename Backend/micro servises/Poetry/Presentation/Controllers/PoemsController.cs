@@ -8,7 +8,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/poems")]
-    public class PoemsController : ControllerBase
+    public class PoemsController : ControllerBase 
     {
         private readonly IPoemService _poemService;
         private readonly ICommentService _commentService;
@@ -28,10 +28,9 @@ namespace Presentation.Controllers
         public async Task<ActionResult<IEnumerable<PoemDto>>> GetPoems([FromQuery] PoemSearchDto searchDto)
         {
             var poems = await _poemService.SearchPoemsAsync(searchDto);
+           
             return Ok(poems);
         }
-
-        
 
         [HttpGet("author/{authorId}")]
         public async Task<ActionResult<IEnumerable<PoemDto>>> GetPoemsByAuthor(Guid authorId)

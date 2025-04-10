@@ -18,9 +18,6 @@ namespace BusinessLogic.Interfaces
         Task<bool> DeletePoemAsync(Guid id, Guid currentUserId);
         Task<bool> IncrementViewCountAsync(Guid id);
         Task<string> GetPoemContentAsync(Guid id);
-        Task<IEnumerable<PoemVersionDto>> GetPoemVersionsAsync(Guid poemId);
-        Task<string> GetPoemVersionContentAsync(Guid versionId);
+        Task<bool> UnpublishPoemAsync(Guid id, Guid currentUserId);
     }
-
-
 }

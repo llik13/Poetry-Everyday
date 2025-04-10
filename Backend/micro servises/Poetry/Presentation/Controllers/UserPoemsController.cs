@@ -40,15 +40,15 @@ namespace Presentation.Controllers
             {
                 AuthorId = currentUserId,
                 PageNumber = 1,
-                PageSize = 100,
+                PageSize = 10,
                 SortBy = "UpdatedAt",
-                SortDescending = true
+                SortDescending = true,
+                IsPublished = false
             };
 
             var result = await _poemService.SearchPoemsAsync(searchDto);
 
-            // Filter for unpublished poems (drafts) in memory
-            var drafts = result.Items.Where(p => !p.IsPublished).ToList();
+            var drafts = result.Items.ToList();
 
             return Ok(new PaginatedResult<PoemDto>
             {
@@ -92,8 +92,6 @@ namespace Presentation.Controllers
             return CreatedAtAction(nameof(GetPoem), new { id = poem.Id }, poem);
         }
 
-
-        //[Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<PoemDto>> UpdatePoem(Guid id, UpdatePoemDto poemDto)
         {
@@ -120,8 +118,28 @@ namespace Presentation.Controllers
             }
         }
 
-        [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("Unpublish/{id}")]
+        public async Task<ActionResult> UnpublishPoem(Guid id)
+        {
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            try
+            {
+                var result = await _poemService.UnpublishPoemAsync(id, currentUserId);
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
         public async Task<ActionResult> DeletePoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -140,25 +158,6 @@ namespace Presentation.Controllers
             {
                 return Forbid(ex.Message);
             }
-        }
-
-        [HttpGet("{id}/versions")]
-        public async Task<ActionResult<IEnumerable<PoemVersionDto>>> GetPoemVersions(Guid id)
-        {
-            var versions = await _poemService.GetPoemVersionsAsync(id);
-            return Ok(versions);
-        }
-
-        [HttpGet("versions/{versionId}/content")]
-        public async Task<ActionResult<string>> GetPoemVersionContent(Guid versionId)
-        {
-            var content = await _poemService.GetPoemVersionContentAsync(versionId);
-            if (content == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(content);
         }
 
         [HttpPost("publish/{id}")]

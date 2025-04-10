@@ -243,33 +243,6 @@ namespace DataAccess.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PoemVersions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    PoemId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Content = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    VersionNumber = table.Column<int>(type: "int", nullable: false),
-                    ChangeNotes = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PoemVersions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PoemVersions_Poems_PoemId",
-                        column: x => x.PoemId,
-                        principalTable: "Poems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "PoemTag",
                 columns: table => new
                 {
@@ -321,11 +294,6 @@ namespace DataAccess.Migrations
                 column: "TagsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PoemVersions_PoemId",
-                table: "PoemVersions",
-                column: "PoemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SavedPoems_CollectionId",
                 table: "SavedPoems",
                 column: "CollectionId");
@@ -353,19 +321,16 @@ namespace DataAccess.Migrations
                 name: "PoemTag");
 
             migrationBuilder.DropTable(
-                name: "PoemVersions");
-
-            migrationBuilder.DropTable(
                 name: "SavedPoems");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Poems");
 
             migrationBuilder.DropTable(
-                name: "Poems");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Collections");

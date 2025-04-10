@@ -14,7 +14,6 @@ namespace DataAccess
         public ICommentRepository Comments { get; private set; }
         public ICollectionRepository Collections { get; private set; }
         public ILikeRepository Likes { get; private set; }
-        public IPoemVersionRepository PoemVersions { get; private set; }
         public ISavedPoemRepository SavedPoems { get; private set; }
         public IPoemNotificationRepository Notifications { get; private set; }
 
@@ -26,7 +25,6 @@ namespace DataAccess
             ICommentRepository commentRepository,
             ICollectionRepository collectionRepository,
             ILikeRepository likeRepository,
-            IPoemVersionRepository poemVersionRepository,
             ISavedPoemRepository savedPoemRepository,
             IPoemNotificationRepository poemNotificationRepository
 )
@@ -38,7 +36,6 @@ namespace DataAccess
             Comments = commentRepository;
             Collections = collectionRepository;
             Likes = likeRepository;
-            PoemVersions = poemVersionRepository;
             SavedPoems = savedPoemRepository;
             Notifications = poemNotificationRepository;
         }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PoetryDbContext))]
-    [Migration("20250408123116_init")]
+    [Migration("20250410164344_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -243,42 +243,6 @@ namespace DataAccess.Migrations
                     b.ToTable("PoemStatistics");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.PoemVersion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("ChangeNotes")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("PoemId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("VersionNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PoemId");
-
-                    b.ToTable("PoemVersions");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.SavedPoem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -433,17 +397,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Poem");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.PoemVersion", b =>
-                {
-                    b.HasOne("DataAccess.Entities.Poem", "Poem")
-                        .WithMany("Versions")
-                        .HasForeignKey("PoemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Poem");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.SavedPoem", b =>
                 {
                     b.HasOne("DataAccess.Entities.Collection", "Collection")
@@ -483,8 +436,6 @@ namespace DataAccess.Migrations
 
                     b.Navigation("Statistics")
                         .IsRequired();
-
-                    b.Navigation("Versions");
                 });
 #pragma warning restore 612, 618
         }

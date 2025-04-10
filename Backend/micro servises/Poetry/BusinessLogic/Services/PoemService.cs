@@ -27,6 +27,7 @@ namespace BusinessLogic.Services
                 Title = poem.Title,
                 Excerpt = poem.Excerpt,
                 AuthorId = poem.AuthorId,
+                Content = poem.Content,
                 AuthorName = poem.AuthorName,
                 IsPublished = poem.IsPublished,
                 CreatedAt = poem.CreatedAt,
@@ -56,7 +57,7 @@ namespace BusinessLogic.Services
                 isLiked = likes.Any();
             }
 
-            var versions = await _unitOfWork.PoemVersions.FindAsync(v => v.PoemId == id);
+            
 
             return new PoemDetailsDto
             {
@@ -88,13 +89,6 @@ namespace BusinessLogic.Services
                     Text = c.Text,
                     CreatedAt = c.CreatedAt
                 }).ToList() ?? new List<CommentDto>(),
-                Versions = versions.Select(v => new PoemVersionDto
-                {
-                    Id = v.Id,
-                    VersionNumber = v.VersionNumber,
-                    ChangeNotes = v.ChangeNotes,
-                    CreatedAt = v.CreatedAt
-                }).OrderByDescending(v => v.VersionNumber).ToList()
             };
         }
 
@@ -106,6 +100,7 @@ namespace BusinessLogic.Services
                 Id = p.Id,
                 Title = p.Title,
                 Excerpt = p.Excerpt,
+                Content = p.Content,
                 AuthorId = p.AuthorId,
                 AuthorName = p.AuthorName,
                 IsPublished = p.IsPublished,
@@ -131,10 +126,12 @@ namespace BusinessLogic.Services
                 searchDto.PageNumber,
                 searchDto.PageSize,
                 searchDto.SortBy,
-                searchDto.SortDescending);
+                searchDto.SortDescending,
+                searchDto.IsPublished);
 
             // If there are specific tag or category filters, apply them in memory
             var result = poems.AsEnumerable();
+
 
             if (searchDto.Tags != null && searchDto.Tags.Any())
             {
@@ -152,6 +149,8 @@ namespace BusinessLogic.Services
             {
                 result = result.Where(p => p.AuthorId == searchDto.AuthorId.Value);
             }
+
+            
 
             // Convert entities to DTOs
             var poemDtos = result.Select(p => new PoemDto
@@ -190,6 +189,10 @@ namespace BusinessLogic.Services
             };
         }
 
+
+       
+
+
         public async Task<PoemDto> CreatePoemAsync(CreatePoemDto poemDto)
         {
             // Create poem entity
@@ -210,7 +213,6 @@ namespace BusinessLogic.Services
                 },
                 Tags = new List<Tag>(),
                 Categories = new List<Category>(),
-                Versions = new List<PoemVersion>()
             };
 
             // Save poem first to get an ID
@@ -250,17 +252,6 @@ namespace BusinessLogic.Services
                     poem.Categories.Add(category);
                 }
             }
-
-            // Add initial version
-            var initialVersion = new PoemVersion
-            {
-                PoemId = poem.Id, // Set the explicit foreign key
-                Content = poemDto.Content,
-                VersionNumber = 1,
-                ChangeNotes = "Initial version"
-            };
-
-            await _unitOfWork.PoemVersions.AddAsync(initialVersion);
 
             // Save all changes
             try
@@ -311,18 +302,7 @@ namespace BusinessLogic.Services
             if (poem.AuthorId != currentUserId)
             {
                 throw new UnauthorizedAccessException("Only the author can update this poem");
-            }
-
-            // Create a new version
-            var versionNumber = poem.Versions.Count() + 1;
-            var newVersion = new PoemVersion
-            {
-                PoemId = poem.Id,
-                Content = poemDto.Content,
-                VersionNumber = versionNumber,
-                ChangeNotes = poemDto.ChangeNotes ?? $"Version {versionNumber}"
-            };
-            await _unitOfWork.PoemVersions.AddAsync(newVersion);
+            }         
 
             // Update poem properties
             poem.Title = poemDto.Title;
@@ -375,7 +355,7 @@ namespace BusinessLogic.Services
                 Id = poem.Id,
                 Title = poem.Title,
                 Excerpt = poem.Excerpt,
-                Content = poemDto.Content,
+                Content = poem.Content,
                 AuthorId = poem.AuthorId,
                 AuthorName = poem.AuthorName,
                 IsPublished = poem.IsPublished,
@@ -393,7 +373,7 @@ namespace BusinessLogic.Services
             };
         }
 
-        public async Task<bool> DeletePoemAsync(Guid id, Guid currentUserId)
+        public async Task<bool> UnpublishPoemAsync(Guid id, Guid currentUserId)
         {
             var poem = await _unitOfWork.Poems.GetByIdAsync(id);
             if (poem == null) return false;
@@ -404,8 +384,25 @@ namespace BusinessLogic.Services
                 throw new UnauthorizedAccessException("Only the author can delete this poem");
             }
 
-            // Soft delete the poem
-            _unitOfWork.Poems.SoftDelete(poem);
+            poem.IsPublished = false;
+            _unitOfWork.Poems.Update(poem);
+            await _unitOfWork.CompleteAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeletePoemAsync(Guid id, Guid currentUserId)
+        {
+            var poem = await _unitOfWork.Poems.GetByIdAsync(id);
+            if (poem == null) return false;
+
+            // Check if user is the author
+            if (poem.AuthorId != currentUserId)
+            {
+                throw new UnauthorizedAccessException("Only the author can unpublish this poem");
+            }
+
+            _unitOfWork.Poems.Remove(poem);
             await _unitOfWork.CompleteAsync();
 
             return true;
@@ -429,26 +426,6 @@ namespace BusinessLogic.Services
             if (poem == null) return null;
 
             return poem.Content;
-        }
-
-        public async Task<IEnumerable<PoemVersionDto>> GetPoemVersionsAsync(Guid poemId)
-        {
-            var versions = await _unitOfWork.PoemVersions.FindAsync(v => v.PoemId == poemId);
-            return versions.Select(v => new PoemVersionDto
-            {
-                Id = v.Id,
-                VersionNumber = v.VersionNumber,
-                ChangeNotes = v.ChangeNotes,
-                CreatedAt = v.CreatedAt
-            }).OrderByDescending(v => v.VersionNumber);
-        }
-
-        public async Task<string> GetPoemVersionContentAsync(Guid versionId)
-        {
-            var version = await _unitOfWork.PoemVersions.GetByIdAsync(versionId);
-            if (version == null) return null;
-
-            return version.Content;
         }
     }
 }

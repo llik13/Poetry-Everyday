@@ -8,7 +8,6 @@
         ICommentRepository Comments { get; }
         ICollectionRepository Collections { get; }
         ILikeRepository Likes { get; }
-        IPoemVersionRepository PoemVersions { get; }
         ISavedPoemRepository SavedPoems { get; }
         IPoemNotificationRepository Notifications { get; }
         Task<int> CompleteAsync();

@@ -9,7 +9,6 @@ namespace BusinessLogic.DTOs
     public class PoemDetailsDto : PoemDto
     {
         public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
-        public List<PoemVersionDto> Versions { get; set; } = new List<PoemVersionDto>();
         public bool IsLikedByCurrentUser { get; set; }
     }
 

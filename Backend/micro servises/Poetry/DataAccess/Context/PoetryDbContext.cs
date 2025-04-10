@@ -9,7 +9,6 @@ namespace DataAccess.Context
         public PoetryDbContext(DbContextOptions<PoetryDbContext> options) : base(options) { }
 
         public DbSet<Poem> Poems { get; set; }
-        public DbSet<PoemVersion> PoemVersions { get; set; }
         public DbSet<PoemStatistics> PoemStatistics { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -29,10 +28,6 @@ namespace DataAccess.Context
                 .WithOne(s => s.Poem)
                 .HasForeignKey<PoemStatistics>(s => s.PoemId);
 
-            modelBuilder.Entity<Poem>()
-                .HasMany(p => p.Versions)
-                .WithOne(v => v.Poem)
-                .HasForeignKey(v => v.PoemId);
 
             // Many-to-many relationships
             modelBuilder.Entity<Poem>()

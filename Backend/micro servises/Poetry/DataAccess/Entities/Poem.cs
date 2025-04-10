@@ -11,7 +11,6 @@
         public PoemStatistics Statistics { get; set; }
         public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
-        public ICollection<PoemVersion> Versions { get; set; } = new List<PoemVersion>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Like> Likes { get; set; } = new List<Like>();
     }

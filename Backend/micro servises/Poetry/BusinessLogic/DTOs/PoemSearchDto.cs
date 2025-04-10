@@ -16,6 +16,7 @@ namespace BusinessLogic.DTOs
         public int PageSize { get; set; } = 10; // Default page size
         public string SortBy { get; set; } = "CreatedAt"; // Default sort field
         public bool SortDescending { get; set; } = true; // Default sort direction
+        public bool IsPublished { get; set; }
     }
 
 

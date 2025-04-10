@@ -63,11 +63,11 @@ namespace DataAccess.Repositories
             int pageNumber,
             int pageSize,
             string sortBy,
-            bool sortDescending)
+            bool sortDescending,
+            bool isPublished)
         {
-            // Base query
             var query = _dbSet
-                .Where(p => p.IsPublished);
+                 .Where(p => p.IsPublished == isPublished);
 
             // Apply search filter if provided
             if (!string.IsNullOrWhiteSpace(searchTerm))

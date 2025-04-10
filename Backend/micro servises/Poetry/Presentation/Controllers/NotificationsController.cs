@@ -9,7 +9,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/notifications")]
-    //[Authorize]
+    [Authorize]
     public class NotificationsController : ControllerBase
     {
         private readonly INotificationService _notificationService;

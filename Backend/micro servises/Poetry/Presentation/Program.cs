@@ -113,7 +113,6 @@ namespace Presentation
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
             builder.Services.AddScoped<ILikeRepository, LikeRepository>();
-            builder.Services.AddScoped<IPoemVersionRepository, PoemVersionRepository>();
             builder.Services.AddScoped<ISavedPoemRepository, SavedPoemRepository>();
             builder.Services.AddScoped<IPoemNotificationRepository, PoemNotificationRepository>();
 
