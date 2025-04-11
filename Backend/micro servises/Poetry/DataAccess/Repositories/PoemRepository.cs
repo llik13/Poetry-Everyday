@@ -1,13 +1,8 @@
 ﻿using DataAccess.Context;
 using DataAccess.Entities;
-using DataAccess.Interface;
 using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.Repositories
 {
@@ -75,6 +70,7 @@ namespace DataAccess.Repositories
                 query = query.Where(p =>
                     p.Title.Contains(searchTerm) ||
                     p.Excerpt.Contains(searchTerm) ||
+                    p.AuthorName.Contains(searchTerm) ||
                     p.Content.Contains(searchTerm) ||
                     p.Tags.Any(t => t.Name.Contains(searchTerm)));
             }

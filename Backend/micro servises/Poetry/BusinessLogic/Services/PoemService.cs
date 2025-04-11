@@ -132,7 +132,6 @@ namespace BusinessLogic.Services
             // If there are specific tag or category filters, apply them in memory
             var result = poems.AsEnumerable();
 
-
             if (searchDto.Tags != null && searchDto.Tags.Any())
             {
                 result = result.Where(p =>
@@ -149,8 +148,6 @@ namespace BusinessLogic.Services
             {
                 result = result.Where(p => p.AuthorId == searchDto.AuthorId.Value);
             }
-
-            
 
             // Convert entities to DTOs
             var poemDtos = result.Select(p => new PoemDto
@@ -188,10 +185,6 @@ namespace BusinessLogic.Services
                 TotalPages = totalPages
             };
         }
-
-
-       
-
 
         public async Task<PoemDto> CreatePoemAsync(CreatePoemDto poemDto)
         {
@@ -427,5 +420,6 @@ namespace BusinessLogic.Services
 
             return poem.Content;
         }
+        
     }
 }

@@ -35,6 +35,7 @@ namespace Presentation.Controllers
         [HttpGet("author/{authorId}")]
         public async Task<ActionResult<IEnumerable<PoemDto>>> GetPoemsByAuthor(Guid authorId)
         {
+
             var poems = await _poemService.GetPoemsByAuthorIdAsync(authorId);
             return Ok(poems);
         }
@@ -51,7 +52,26 @@ namespace Presentation.Controllers
 
             return Ok(content);
         }
+        
+        [HttpGet("{id}/poemDetailed")]
+        public async Task<ActionResult<PoemDetailsDto>> GetPoemDetailsAsync(Guid id)
+        {
+            Guid? currentUserId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            }
+            var poem = await _poemService.GetPoemDetailsAsync(Id, currentUserId);
+            if (poem == null)
+            {
+                return NotFound();
+            }
 
+            // Increment view count asynchronously
+            _ = _poemService.IncrementViewCountAsync(Id);
+
+            return Ok(poem);
+        } 
         
 
         [HttpGet("{id}/comments")]
@@ -64,7 +84,7 @@ namespace Presentation.Controllers
             return Ok(comments);
         }
 
-       // [Authorize]
+        [Authorize]
         [HttpPost("{id}/comments")]
         public async Task<ActionResult<CommentDto>> AddComment(Guid id, [FromBody] string commentText)
         {
@@ -90,7 +110,7 @@ namespace Presentation.Controllers
             }
         }
 
-    //    [Authorize]
+        [Authorize]
         [HttpDelete("comments/{commentId}")]
         public async Task<ActionResult> DeleteComment(Guid commentId)
         {
@@ -112,7 +132,7 @@ namespace Presentation.Controllers
             }
         }
 
-     //   [Authorize]
+        [Authorize]
         [HttpPost("{id}/like")]
         public async Task<ActionResult> LikePoem(Guid id)
         {
@@ -128,7 +148,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-    //    [Authorize]
+        [Authorize]
         [HttpDelete("{id}/like")]
         public async Task<ActionResult> UnlikePoem(Guid id)
         {
@@ -143,7 +163,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-    //    [Authorize]
+        [Authorize]
         [HttpGet("{id}/liked")]
         public async Task<ActionResult<bool>> IsPoemLiked(Guid id)
         {

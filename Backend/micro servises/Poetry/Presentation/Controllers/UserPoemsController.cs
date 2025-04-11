@@ -75,8 +75,7 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            // Increment view count asynchronously
-            _ = _poemService.IncrementViewCountAsync(id);
+            
 
             return Ok(poem);
         }
