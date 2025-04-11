@@ -28,7 +28,8 @@ namespace BusinessLogic.Services
                 Name = collectionDto.Name,
                 Description = collectionDto.Description,
                 UserId = collectionDto.UserId,
-                IsPublic = collectionDto.IsPublic
+                IsPublic = collectionDto.IsPublic,
+                PublishedPoemCount = 0
             };
 
             await _unitOfWork.Collections.AddAsync(collection);
@@ -55,7 +56,7 @@ namespace BusinessLogic.Services
                 Description = c.Description,
                 UserId = c.UserId,
                 IsPublic = c.IsPublic,
-                PoemCount = c.SavedPoems?.Count ?? 0
+                PoemCount = c.PublishedPoemCount
             });
         }
 
@@ -103,9 +104,8 @@ namespace BusinessLogic.Services
             {
                 throw new UnauthorizedAccessException("Only the collection owner can add poems");
             }
-
             // Check if poem exists
-            var poem = await _unitOfWork.Poems.GetByIdAsync(poemId);
+            var poem = await _unitOfWork.Poems.GetPoemWithDetailsAsync(poemId);
             if (poem == null) return false;
 
             // Check if already in collection
@@ -126,6 +126,13 @@ namespace BusinessLogic.Services
             // Update save count
             poem.Statistics.SaveCount++;
             _unitOfWork.Poems.Update(poem);
+
+            // Update published poem count if the poem is published
+            if (poem.IsPublished)
+            {
+                collection.PublishedPoemCount++;
+                _unitOfWork.Collections.Update(collection);
+            }
 
             // Create notification for poem author
             if (poem.AuthorId != userId)
@@ -163,15 +170,24 @@ namespace BusinessLogic.Services
             var savedPoem = savedPoems.FirstOrDefault();
             if (savedPoem == null) return false;
 
+            // Get the poem to check if it's published
+            var poem = await _unitOfWork.Poems.GetByIdAsync(poemId);
+
             // Remove from collection
             _unitOfWork.SavedPoems.Remove(savedPoem);
 
             // Update save count
-            var poem = await _unitOfWork.Poems.GetByIdAsync(poemId);
             if (poem != null && poem.Statistics != null)
             {
                 poem.Statistics.SaveCount = Math.Max(0, poem.Statistics.SaveCount - 1);
                 _unitOfWork.Poems.Update(poem);
+
+                // Update published poem count if the poem is published
+                if (poem.IsPublished)
+                {
+                    collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
+                    _unitOfWork.Collections.Update(collection);
+                }
             }
 
             await _unitOfWork.CompleteAsync();
@@ -190,7 +206,7 @@ namespace BusinessLogic.Services
             }
 
             // Soft delete
-            _unitOfWork.Collections.SoftDelete(collection);
+            _unitOfWork.Collections.Remove(collection);
             await _unitOfWork.CompleteAsync();
 
             return true;

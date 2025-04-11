@@ -295,7 +295,11 @@ namespace BusinessLogic.Services
             if (poem.AuthorId != currentUserId)
             {
                 throw new UnauthorizedAccessException("Only the author can update this poem");
-            }         
+            }
+
+            // Check if the published status is changing
+            bool publishStatusChanged = poem.IsPublished != poemDto.IsPublished;
+            bool previousPublishStatus = poem.IsPublished;
 
             // Update poem properties
             poem.Title = poemDto.Title;
@@ -319,7 +323,6 @@ namespace BusinessLogic.Services
                     poem.Tags.Add(tag);
                 }
             }
-
             // Update categories
             poem.Categories.Clear();
             if (poemDto.Categories != null && poemDto.Categories.Any())
@@ -339,9 +342,32 @@ namespace BusinessLogic.Services
             _unitOfWork.Poems.Update(poem);
             await _unitOfWork.CompleteAsync();
 
-            // Create notifications for followers (simplified implementation)
-            // In a real application, this would be handled by an event bus
+            if (publishStatusChanged)
+            {
+                // Find all collections containing this poem
+                var savedPoems = await _unitOfWork.SavedPoems.FindAsync(sp => sp.PoemId == poem.Id);
 
+                foreach (var savedPoem in savedPoems)
+                {
+                    var collection = await _unitOfWork.Collections.GetByIdAsync(savedPoem.CollectionId);
+                    if (collection != null)
+                    {
+                        // If published -> unpublished, decrease count
+                        if (previousPublishStatus && !poem.IsPublished)
+                        {
+                            collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
+                        }
+                        // If unpublished -> published, increase count
+                        else if (!previousPublishStatus && poem.IsPublished)
+                        {
+                            collection.PublishedPoemCount++;
+                        }
+
+                        _unitOfWork.Collections.Update(collection);
+                        await _unitOfWork.CompleteAsync();
+                    }
+                }
+            }
             // Return updated poem
             return new PoemDto
             {
@@ -377,8 +403,26 @@ namespace BusinessLogic.Services
                 throw new UnauthorizedAccessException("Only the author can delete this poem");
             }
 
+            bool wasPublished = poem.IsPublished;
             poem.IsPublished = false;
             _unitOfWork.Poems.Update(poem);
+
+            // If it was published, update collection counts
+            if (wasPublished)
+            {
+                var savedPoems = await _unitOfWork.SavedPoems.FindAsync(sp => sp.PoemId == id);
+
+                foreach (var savedPoem in savedPoems)
+                {
+                    var collection = await _unitOfWork.Collections.GetByIdAsync(savedPoem.CollectionId);
+                    if (collection != null)
+                    {
+                        collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
+                        _unitOfWork.Collections.Update(collection);
+                    }
+                }
+            }
+
             await _unitOfWork.CompleteAsync();
 
             return true;
@@ -392,9 +436,29 @@ namespace BusinessLogic.Services
             // Check if user is the author
             if (poem.AuthorId != currentUserId)
             {
-                throw new UnauthorizedAccessException("Only the author can unpublish this poem");
+                throw new UnauthorizedAccessException("Only the author can delete this poem");
             }
 
+            // If published, update all collections containing this poem
+            if (poem.IsPublished)
+            {
+                var savedPoems = await _unitOfWork.SavedPoems.FindAsync(sp => sp.PoemId == id);
+
+                foreach (var savedPoem in savedPoems)
+                {
+                    var collection = await _unitOfWork.Collections.GetByIdAsync(savedPoem.CollectionId);
+                    if (collection != null)
+                    {
+                        collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
+                        _unitOfWork.Collections.Update(collection);
+                    }
+
+                    // Remove the saved poem
+                    _unitOfWork.SavedPoems.Remove(savedPoem);
+                }
+            }
+
+            // Now remove the poem
             _unitOfWork.Poems.Remove(poem);
             await _unitOfWork.CompleteAsync();
 
@@ -420,6 +484,5 @@ namespace BusinessLogic.Services
 
             return poem.Content;
         }
-        
     }
 }

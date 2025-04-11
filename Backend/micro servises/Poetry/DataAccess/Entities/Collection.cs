@@ -12,6 +12,7 @@ namespace DataAccess.Entities
         public string Description { get; set; }
         public Guid UserId { get; set; }
         public bool IsPublic { get; set; }
+        public int PublishedPoemCount { get; set; }
         public ICollection<SavedPoem> SavedPoems { get; set; } = new List<SavedPoem>();
     }
 
