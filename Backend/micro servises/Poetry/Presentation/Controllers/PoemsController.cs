@@ -61,14 +61,14 @@ namespace Presentation.Controllers
             {
                 currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             }
-            var poem = await _poemService.GetPoemDetailsAsync(Id, currentUserId);
+            var poem = await _poemService.GetPoemDetailsAsync(id, currentUserId);
             if (poem == null)
             {
                 return NotFound();
             }
 
             // Increment view count asynchronously
-            _ = _poemService.IncrementViewCountAsync(Id);
+            _ = _poemService.IncrementViewCountAsync(id);
 
             return Ok(poem);
         } 

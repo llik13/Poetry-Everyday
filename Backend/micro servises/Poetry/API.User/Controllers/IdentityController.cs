@@ -95,7 +95,7 @@ namespace API.User.Controllers
             return Ok(new { message = "Password reset successful." });
         }
 
-        [Authorize]
+        
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
