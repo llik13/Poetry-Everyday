@@ -1,13 +1,11 @@
 ﻿using BLL.User.DTOs;
 using BLL.User.Interfaces;
+using Contract.Change;
 using DAL.User.Entities;
 using DAL.User.Interfaces;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BLL.User.Services
 {
@@ -16,15 +14,18 @@ namespace BLL.User.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserActivityRepository _activityRepository;
         private readonly IFileStorageService _fileStorageService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         public UserProfileService(
             UserManager<ApplicationUser> userManager,
             IUserActivityRepository activityRepository,
-            IFileStorageService fileStorageService)
+            IFileStorageService fileStorageService,
+            IPublishEndpoint publishEndpoint)
         {
             _userManager = userManager;
             _activityRepository = activityRepository;
             _fileStorageService = fileStorageService;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<UserProfileDto> GetUserProfileAsync(string userId)
@@ -64,12 +65,18 @@ namespace BLL.User.Services
             // Update biography
             user.Biography = updateProfileDto.Biography;
 
+            // Check if username is being updated
+            string oldUsername = user.UserName;
+            bool usernameChanged = false;
+
             // Update username if provided
             if (!string.IsNullOrEmpty(updateProfileDto.UserName) && user.UserName != updateProfileDto.UserName)
             {
                 var setUsernameResult = await _userManager.SetUserNameAsync(user, updateProfileDto.UserName);
                 if (!setUsernameResult.Succeeded)
                     return false;
+
+                usernameChanged = true;
             }
 
             var result = await _userManager.UpdateAsync(user);
@@ -83,6 +90,18 @@ namespace BLL.User.Services
                     Type = ActivityType.UpdateProfile,
                     Description = "User updated their profile"
                 });
+
+                // Publish username changed event if username was updated
+                if (usernameChanged)
+                {
+                    await _publishEndpoint.Publish<UserNameChangedEvent>(new
+                    {
+                        UserId = userId,
+                        OldUserName = oldUsername,
+                        NewUserName = updateProfileDto.UserName,
+                        Timestamp = DateTime.UtcNow
+                    });
+                }
             }
 
             return result.Succeeded;
@@ -181,5 +200,4 @@ namespace BLL.User.Services
             return result.Succeeded;
         }
     }
-
 }

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL.User", "DAL.User\DAL.Us
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL.User", "BLL\BLL.User.csproj", "{0F2F4DBF-9160-438F-B594-A14E35AEDF0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.User", "API.User\API.User.csproj", "{33F738D1-B9B3-4832-BA2E-2F1546193892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.User", "API.User\API.User.csproj", "{33F738D1-B9B3-4832-BA2E-2F1546193892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract", "Contract\Contract.csproj", "{938B493D-4278-420B-A428-5F2D604C2FD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{33F738D1-B9B3-4832-BA2E-2F1546193892}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33F738D1-B9B3-4832-BA2E-2F1546193892}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33F738D1-B9B3-4832-BA2E-2F1546193892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938B493D-4278-420B-A428-5F2D604C2FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938B493D-4278-420B-A428-5F2D604C2FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938B493D-4278-420B-A428-5F2D604C2FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938B493D-4278-420B-A428-5F2D604C2FD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

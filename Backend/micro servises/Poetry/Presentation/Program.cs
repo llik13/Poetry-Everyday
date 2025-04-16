@@ -1,4 +1,5 @@
 
+using BusinessLogic.Consumer;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Services;
 using DataAccess;
@@ -6,6 +7,7 @@ using DataAccess.Context;
 using DataAccess.Interface;
 using DataAccess.Interfaces;
 using DataAccess.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -126,6 +128,35 @@ namespace Presentation
             builder.Services.AddScoped<ICollectionService, CollectionService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
 
+            // Configure MassTransit with RabbitMQ
+            builder.Services.AddMassTransit(x =>
+            {
+                // Add consumer
+                x.AddConsumer<UserNameChangedConsumer>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    // Configure the RabbitMQ host
+                    cfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", h =>
+                    {
+                        h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
+                        h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
+                    });
+
+                    // Configure the consumer
+                    cfg.ReceiveEndpoint("poetry-service-username-changed", e =>
+                    {
+                        // Use the consumer
+                        e.ConfigureConsumer<UserNameChangedConsumer>(context);
+
+                        // Configure retry policy
+                        e.UseMessageRetry(r => r.Intervals(100, 500, 1000, 5000));
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline
@@ -143,6 +174,8 @@ namespace Presentation
             {
                 app.UseHttpsRedirection();
             }
+
+           
 
             // Use custom middleware for error handling
             app.UseMiddleware<ErrorHandlingMiddleware>();

@@ -5,6 +5,7 @@ using DAL.User.Context;
 using DAL.User.Entities;
 using DAL.User.Interfaces;
 using DAL.User.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +68,22 @@ namespace API.User
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+
+            builder.Services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    // Configure the RabbitMQ host
+                    cfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", h =>
+                    {
+                        h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
+                        h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
+                    });
+
+                    // Configure message topology for the UserNameChangedEvent
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
 
             var app = builder.Build();
 
