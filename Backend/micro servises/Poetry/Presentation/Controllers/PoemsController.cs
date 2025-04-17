@@ -8,7 +8,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/poems")]
-    public class PoemsController : ControllerBase 
+    public class PoemsController : ControllerBase
     {
         private readonly IPoemService _poemService;
         private readonly ICommentService _commentService;
@@ -28,7 +28,7 @@ namespace Presentation.Controllers
         public async Task<ActionResult<IEnumerable<PoemDto>>> GetPoems([FromQuery] PoemSearchDto searchDto)
         {
             var poems = await _poemService.SearchPoemsAsync(searchDto);
-           
+
             return Ok(poems);
         }
 
@@ -40,8 +40,8 @@ namespace Presentation.Controllers
             return Ok(poems);
         }
 
-      
-        [HttpGet("{id}/content")]
+
+        [HttpGet("content/{id}")]
         public async Task<ActionResult<string>> GetPoemContent(Guid id)
         {
             var content = await _poemService.GetPoemContentAsync(id);
@@ -52,8 +52,8 @@ namespace Presentation.Controllers
 
             return Ok(content);
         }
-        
-        [HttpGet("{id}/poemDetailed")]
+
+        [HttpGet("poemDetailed/{id}")]
         public async Task<ActionResult<PoemDetailsDto>> GetPoemDetailsAsync(Guid id)
         {
             Guid? currentUserId = null;
@@ -71,10 +71,10 @@ namespace Presentation.Controllers
             _ = _poemService.IncrementViewCountAsync(id);
 
             return Ok(poem);
-        } 
-        
+        }
 
-        [HttpGet("{id}/comments")]
+
+        [HttpGet("comments/{id}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetPoemComments(
             Guid id,
             [FromQuery] int pageNumber = 1,
@@ -85,7 +85,7 @@ namespace Presentation.Controllers
         }
 
         [Authorize]
-        [HttpPost("{id}/comments")]
+        [HttpPost("comments/{id}")]
         public async Task<ActionResult<CommentDto>> AddComment(Guid id, [FromBody] string commentText)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -111,7 +111,7 @@ namespace Presentation.Controllers
         }
 
         [Authorize]
-        [HttpDelete("comments/{commentId}")]
+        [HttpDelete("comments/{id}")]
         public async Task<ActionResult> DeleteComment(Guid commentId)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -133,7 +133,7 @@ namespace Presentation.Controllers
         }
 
         [Authorize]
-        [HttpPost("{id}/like")]
+        [HttpPost("like/{id}")]
         public async Task<ActionResult> LikePoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -149,7 +149,7 @@ namespace Presentation.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{id}/like")]
+        [HttpDelete("like/{id}")]
         public async Task<ActionResult> UnlikePoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -164,7 +164,7 @@ namespace Presentation.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}/liked")]
+        [HttpGet("liked/{id}")]
         public async Task<ActionResult<bool>> IsPoemLiked(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

@@ -1,0 +1,238 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/poems",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/poems",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/author/{authorId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/poems/author/{authorId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/content/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/poems/content/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/poemDetailed/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/poems/poemDetailed/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/comments/{id}",
+      "UpstreamHttpMethod": [ "GET", "POST", "DElETE" ],
+      "DownstreamPathTemplate": "/api/poems/comments/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/like/{id}",
+      "UpstreamHttpMethod": [ "POST", "DElETE" ],
+      "DownstreamPathTemplate": "/api/poems/like/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/poems/liked/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/poems/liked/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/collections",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamPathTemplate": "/api/collections",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/collections/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DownstreamPathTemplate": "/api/collections/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/collections/{collectionId}/poems/{poemId}",
+      "UpstreamHttpMethod": [ "POST", "DELETE" ],
+      "DownstreamPathTemplate": "/api/collections/{collectionId}/poems/{poemId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/mypoems",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamPathTemplate": "/api/mypoems",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/mypoems/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/mypoems/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/mypoems/drafts",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/mypoems/drafts",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/mypoems/unpublish/{id}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/mypoems/unpublish/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/mypoems/publish/{id}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/mypoems/publish/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/notifications",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/notifications",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/notifications/read/{id}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/notifications/read/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/notifications/read-all",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/notifications/read-all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    }
+  ]
+}

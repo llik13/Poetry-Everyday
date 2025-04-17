@@ -117,7 +117,7 @@ namespace Presentation.Controllers
             }
         }
 
-        [HttpDelete("Unpublish/{id}")]
+        [HttpPut("unpublish/{id}")]
         public async Task<ActionResult> UnpublishPoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -138,7 +138,7 @@ namespace Presentation.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -159,7 +159,7 @@ namespace Presentation.Controllers
             }
         }
 
-        [HttpPost("publish/{id}")]
+        [HttpPut("publish/{id}")]
         public async Task<ActionResult> PublishPoem(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

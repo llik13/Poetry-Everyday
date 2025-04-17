@@ -1,0 +1,30 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "Poetry",
+      "Config": [
+        {
+          "Name": "Poetry Service API",
+          "Version": "v1",
+          "Service": {
+            "Name": "poetry",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "Registration",
+      "Config": [
+        {
+          "Name": "Registration API",
+          "Version": "v1",
+          "Service": {
+            "Name": "registration",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    }
+  ]
+}

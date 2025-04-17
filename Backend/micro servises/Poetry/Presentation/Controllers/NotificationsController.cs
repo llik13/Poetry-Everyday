@@ -27,7 +27,7 @@ namespace Presentation.Controllers
             return Ok(notifications);
         }
 
-        [HttpPut("{id}/read")]
+        [HttpPut("read/{id}")]
         public async Task<ActionResult> MarkAsRead(Guid id)
         {
             var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

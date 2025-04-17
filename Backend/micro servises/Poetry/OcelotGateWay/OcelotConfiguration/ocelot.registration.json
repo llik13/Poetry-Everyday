@@ -1,0 +1,161 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/identity/register",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/register",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/login",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/login",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/refresh-token",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/refresh-token",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/verify-email",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/identity/verify-email",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/forgot-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/forgot-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/reset-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/reset-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/identity/logout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/logout",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/profile",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "DownstreamPathTemplate": "/api/profile",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/profile/change-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/profile/change-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/profile/upload-image",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/profile/upload-image",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/profile/activity",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/profile/activity",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/profile/notification-settings",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/profile/notification-settings",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    }
+
+  ]
+}
