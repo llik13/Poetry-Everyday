@@ -1,0 +1,122 @@
+.comment-section {
+  margin-top: 4rem;
+  border-top: 1px solid var(--color-bg-dark);
+  padding-top: 2rem;
+}
+
+.comment-section h3 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+}
+
+.comment-form {
+  margin-bottom: 3rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.5rem;
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+  transition: border-color 0.3s;
+  font-family: var(--font-primary);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.2);
+}
+
+.login-prompt {
+  background-color: var(--color-bg-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-prompt a {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.comments-list {
+  margin-top: 2rem;
+}
+
+.no-comments {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: 2rem;
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+}
+
+.comment {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid var(--color-primary);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.comment-date {
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+.comment-text {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-delete-comment {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.3rem 0.8rem;
+  transition: background-color 0.3s;
+  border-radius: var(--border-radius-sm);
+}
+
+.btn-delete-comment:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+@media (max-width: 768px) {
+  .comment-header {
+    flex-direction: column;
+  }
+
+  .comment-date {
+    margin-top: 0.5rem;
+  }
+}

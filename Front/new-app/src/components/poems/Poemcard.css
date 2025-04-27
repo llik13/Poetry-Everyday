@@ -1,0 +1,65 @@
+.poem-card {
+  margin-bottom: var(--spacing-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.poem-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.poem {
+  white-space: pre-wrap;
+  font-size: 1.4rem;
+  font-family: var(--font-poetry);
+  line-height: 1.4;
+  background: none;
+  border: none;
+  margin-top: var(--spacing-sm);
+  height: 12rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.poem::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  background: linear-gradient(transparent, var(--color-bg));
+}
+
+.poem-btn {
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  display: block;
+  text-align: right;
+}
+
+.poem-btn:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.poem-stats {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-light);
+  font-size: 1.2rem;
+  margin-top: var(--spacing-sm);
+}
+
+.poem-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.poem-stats i {
+  font-size: 1.4rem;
+}

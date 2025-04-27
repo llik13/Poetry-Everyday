@@ -1,0 +1,181 @@
+.poem-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.poem-header {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1.5rem;
+}
+
+.poem-title {
+  font-size: 3.2rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.poem-author {
+  font-size: 1.8rem;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.poem-author a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.poem-author a:hover {
+  color: var(--color-primary);
+}
+
+.poem-content {
+  font-family: var(--font-poetry);
+  font-size: 1.8rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  margin-bottom: 3rem;
+}
+
+.poem-meta {
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  margin: 1.5rem 0;
+}
+
+.poem-meta span {
+  margin: 0 0.5rem;
+}
+
+.poem-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.poem-tag {
+  background-color: var(--color-bg-medium);
+  color: var(--color-text);
+  padding: 0.4rem 1rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 1.2rem;
+}
+
+.actions-panel {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-action:hover {
+  background-color: var(--color-bg-medium);
+}
+
+.btn-like.liked {
+  background-color: rgba(139, 94, 60, 0.1);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.show-modal {
+  display: flex;
+}
+
+.modal-content {
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-bg-dark);
+}
+
+.modal-header h4 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.modal-body {
+  padding: 2rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid var(--color-bg-dark);
+}
+
+/* Collection list within modal */
+.collection-list {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .actions-panel {
+    flex-direction: column;
+  }
+
+  .poem-container {
+    padding: 1.5rem;
+  }
+
+  .poem-title {
+    font-size: 2.8rem;
+  }
+
+  .poem-content {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,67 @@
+/* This file includes only component-specific styles */
+/* Base styles are imported from the global CSS */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-bg-medium);
+  height: 9.6rem;
+  padding: 0 var(--spacing-xl);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-main {
+  font-size: 3rem;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.main-nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.main-nav-link:link,
+.main-nav-link:visited {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 1.8rem;
+  transition: all 0.3s;
+}
+
+.main-nav-link:hover,
+.main-nav-link:active,
+.main-nav-link.active {
+  color: var(--color-accent);
+}
+
+@media (max-width: 992px) {
+  .header {
+    padding: 0 var(--spacing-lg);
+  }
+
+  .main-nav-list {
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .main-nav-list {
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
