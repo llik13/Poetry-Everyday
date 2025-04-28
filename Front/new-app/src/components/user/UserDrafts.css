@@ -1,0 +1,74 @@
+.user-drafts {
+  margin-top: var(--spacing-md);
+}
+
+.drafts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.drafts-header h2 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.no-drafts {
+  background-color: var(--color-bg-light);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.no-drafts p {
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-light);
+}
+
+.drafts-list {
+  margin-top: var(--spacing-md);
+}
+
+.drafts-list table {
+  font-size: 1.6rem;
+}
+
+.drafts-list th {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.drafts-list a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.drafts-list a:hover {
+  text-decoration: underline;
+}
+
+.draft-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+@media (max-width: 768px) {
+  .drafts-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: flex-start;
+  }
+
+  .draft-actions {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .draft-actions button {
+    width: 100%;
+  }
+}

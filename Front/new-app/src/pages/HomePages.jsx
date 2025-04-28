@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PageLayout from "../components/layout/PageLayout";
 import Button from "../components/common/Button";
-import "./HomePage.css";
+import "./HomePages.css";
 
 const HomePage = () => {
   return (

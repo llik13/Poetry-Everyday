@@ -1,0 +1,197 @@
+/* Layout CSS for Poetry Everyday App */
+
+/* Main layout containers */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: var(--spacing-lg) 0;
+}
+
+.section {
+  padding: var(--spacing-xl) 0;
+}
+
+.section-light {
+  background-color: var(--color-bg-light);
+}
+
+.section-dark {
+  background-color: var(--color-bg-medium);
+}
+
+/* Page containers */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.page-narrow {
+  max-width: 800px;
+}
+
+.page-wide {
+  max-width: 1400px;
+}
+
+/* Page headers */
+.page-header {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.page-title {
+  font-size: 3.2rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+
+.page-subtitle {
+  font-size: 1.8rem;
+  color: var(--color-text-light);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Flex utilities */
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.flex-gap-md {
+  gap: var(--spacing-md);
+}
+
+.flex-gap-lg {
+  gap: var(--spacing-lg);
+}
+
+/* Card layouts */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.card {
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-body {
+  padding: var(--spacing-md);
+}
+
+.card-footer {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-top: 1px solid var(--color-bg-light);
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+  border: 0.4rem solid var(--color-bg-medium);
+  border-right-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .page-title {
+    font-size: 2.8rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.6rem;
+  }
+
+  .section {
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2.4rem;
+  }
+
+  main {
+    padding: var(--spacing-md) 0;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 576px) {
+  .page-container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

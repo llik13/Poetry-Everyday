@@ -5,7 +5,7 @@ import {
   registerUser,
   logoutUser,
 } from "../services/authService.js";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 

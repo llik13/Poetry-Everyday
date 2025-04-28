@@ -1,0 +1,105 @@
+.user-comments {
+  margin-top: var(--spacing-md);
+}
+
+.comments-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.comments-header h2 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.no-comments {
+  background-color: var(--color-bg-light);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.no-comments p {
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-light);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.comment-card {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--color-primary);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+}
+
+.comment-poem-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.comment-poem-title:hover {
+  color: var(--color-primary);
+}
+
+.comment-date {
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
+}
+
+.comment-content {
+  font-size: 1.6rem;
+  line-height: 1.5;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-view-poem {
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.3s;
+}
+
+.btn-view-poem:hover {
+  background-color: rgba(139, 94, 60, 0.1);
+  text-decoration: underline;
+}
+
+.pagination-container {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .comment-header {
+    flex-direction: column;
+  }
+
+  .comment-date {
+    margin-top: var(--spacing-xs);
+  }
+}

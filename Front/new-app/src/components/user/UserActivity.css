@@ -1,0 +1,120 @@
+.user-activity {
+  margin-top: var(--spacing-md);
+}
+
+.activity-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.activity-header h2 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.no-activity {
+  background-color: var(--color-bg-light);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.activity-timeline {
+  position: relative;
+  margin-left: 3rem;
+}
+
+.activity-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background-color: var(--color-bg-dark);
+  margin-left: -1px;
+}
+
+.activity-item {
+  position: relative;
+  padding-bottom: var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+}
+
+.activity-icon-container {
+  position: absolute;
+  left: -3rem;
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--color-bg);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--color-bg-dark);
+}
+
+.activity-icon {
+  font-size: 1.6rem;
+  color: var(--color-primary);
+}
+
+.activity-content {
+  background-color: var(--color-bg-light);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-description {
+  font-size: 1.6rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.activity-time {
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+}
+
+.activity-actions {
+  margin-top: var(--spacing-sm);
+}
+
+.view-item-link {
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.3s;
+}
+
+.view-item-link:hover {
+  background-color: rgba(139, 94, 60, 0.1);
+  text-decoration: underline;
+}
+
+.pagination-container {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .activity-timeline {
+    margin-left: 2rem;
+  }
+
+  .activity-icon-container {
+    left: -2.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .activity-item {
+    padding-left: var(--spacing-md);
+  }
+}

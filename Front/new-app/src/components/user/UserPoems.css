@@ -1,0 +1,180 @@
+.user-poems {
+  margin-top: var(--spacing-md);
+}
+
+.poems-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.poems-header h2 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.no-poems {
+  background-color: var(--color-bg-light);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.no-poems p {
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-light);
+}
+
+.no-poems-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.poems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.poem-card {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-bg-dark);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poem-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.poem-title {
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.poem-title a {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.poem-title a:hover {
+  color: var(--color-primary);
+}
+
+.poem-meta {
+  display: flex;
+  gap: var(--spacing-md);
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.poem-excerpt {
+  font-size: 1.4rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.poem-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.poem-tag {
+  background-color: rgba(139, 94, 60, 0.1);
+  color: var(--color-primary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 1.2rem;
+}
+
+.poem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+}
+
+.poem-actions a,
+.poem-actions button {
+  flex: 1;
+  min-width: 70px;
+  padding: 0.5rem;
+  font-size: 1.3rem;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.btn-view {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn-edit {
+  background-color: var(--color-bg-medium);
+  color: var(--color-text);
+}
+
+.btn-unpublish {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+}
+
+.btn-delete {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+}
+
+.btn-view:hover {
+  background-color: var(--color-bg-medium);
+}
+
+.btn-edit:hover {
+  background-color: var(--color-primary-light);
+  color: white;
+}
+
+.btn-unpublish:hover {
+  background-color: var(--color-bg-dark);
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: rgba(220, 53, 69, 0.2);
+}
+
+@media (max-width: 768px) {
+  .poems-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: flex-start;
+  }
+
+  .no-poems-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .poems-grid {
+    grid-template-columns: 1fr;
+  }
+}
