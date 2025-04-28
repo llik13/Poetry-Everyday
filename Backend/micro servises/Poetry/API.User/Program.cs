@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+// Исправленная версия вашего Program.cs
+
 namespace API.User
 {
     public class Program
@@ -22,11 +24,54 @@ namespace API.User
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-            // Add JWT Authentication configuration to Program.cs
+            // Добавляем CORS в начало
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000") // Ваше React приложение
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials(); // Важно для cookies
+                });
+            });
+
+            // Настройка Identity сервиса
+            builder.Services.AddDbContext<IdentityDbContext>(options =>
+            {
+                string connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            });
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Отдельно настраиваем куки для аутентификации
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                // Настройка для перенаправления на страницу входа
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+
+                // Настройка для перенаправления на страницу "доступ запрещен"
+                options.Events.OnRedirectToAccessDenied = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    return Task.CompletedTask;
+                };
+            });
+
+            // Настройка JWT аутентификации
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -42,15 +87,15 @@ namespace API.User
                         Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
                 };
 
-                // Handle authentication errors for API requests
+                // Обработка ошибок аутентификации для API запросов
                 options.Events = new JwtBearerEvents
                 {
                     OnChallenge = async context =>
                     {
-                        // Skip the default logic
+                        // Пропускаем стандартную логику
                         context.HandleResponse();
 
-                        // If it's an API request, return JSON
+                        // Если это API запрос, возвращаем JSON
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "application/json";
 
@@ -79,39 +124,11 @@ namespace API.User
             });
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowReactApp", builder =>
-                {
-                    builder
-                        .WithOrigins("http://localhost:3000") // Your React app's origin
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials(); // Important for cookies/authentication
-                });
-            });
-
-            builder.Services.AddControllers();
-
-
-
-            builder.Services.AddDbContext<IdentityDbContext>(options =>
-            {
-                string connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            });
-
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<IdentityDbContext>()
-            .AddDefaultTokenProviders();
-
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
-
             builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
             builder.Services.AddScoped<IFileStorageService, FileStorageService>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
@@ -123,23 +140,18 @@ namespace API.User
             {
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    // Configure the RabbitMQ host
                     cfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", h =>
                     {
                         h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
                         h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
                     });
-
-                    // Configure message topology for the UserNameChangedEvent
                     cfg.ConfigureEndpoints(context);
                 });
             });
 
             var app = builder.Build();
 
-            app.UseCors("AllowReactApp");
-
-            // Configure the HTTP request pipeline.
+            // Настраиваем порядок middleware
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -148,9 +160,11 @@ namespace API.User
 
             app.UseHttpsRedirection();
 
+            // CORS нужно использовать перед Authentication и Authorization
+            app.UseCors("AllowReactApp");
+
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
