@@ -14,7 +14,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshingToken, setRefreshingToken] = useState(false);
 
+  // Initialize authentication state
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem("token");
@@ -26,23 +28,37 @@ export const AuthProvider = ({ children }) => {
           const currentTime = Date.now() / 1000;
 
           if (decodedToken.exp < currentTime) {
+            console.log("Token expired, attempting to refresh...");
             // Token is expired, try to refresh
-            const refreshResult = await refreshToken();
-            if (refreshResult.accessToken) {
-              setToken(refreshResult.accessToken);
-              localStorage.setItem("token", refreshResult.accessToken);
-              setCurrentUser({
-                id: refreshResult.userId,
-                username: refreshResult.userName,
-              });
-            } else {
-              // Refresh failed, log out
+            setRefreshingToken(true);
+            try {
+              const refreshResult = await refreshToken();
+              if (refreshResult && refreshResult.accessToken) {
+                setToken(refreshResult.accessToken);
+                localStorage.setItem("token", refreshResult.accessToken);
+                setCurrentUser({
+                  id: refreshResult.userId,
+                  username: refreshResult.userName,
+                });
+                console.log("Token refreshed successfully");
+              } else {
+                // Refresh failed, log out
+                console.log("Token refresh failed, logging out");
+                setToken(null);
+                setCurrentUser(null);
+                localStorage.removeItem("token");
+              }
+            } catch (refreshError) {
+              console.error("Error refreshing token:", refreshError);
               setToken(null);
               setCurrentUser(null);
               localStorage.removeItem("token");
+            } finally {
+              setRefreshingToken(false);
             }
           } else {
             // Token is still valid
+            console.log("Token is valid, setting user");
             setCurrentUser({
               id: decodedToken.sub,
               username:
@@ -65,12 +81,55 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  // Set up token refresh timer
+  useEffect(() => {
+    if (!token) return;
+
+    try {
+      const decodedToken = jwtDecode(token);
+      const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
+      const currentTime = Date.now();
+
+      // Calculate time until token expiration
+      const timeUntilExpiration = expirationTime - currentTime;
+
+      // If token is about to expire, refresh 5 minutes before expiration
+      if (timeUntilExpiration > 0) {
+        const refreshTime = timeUntilExpiration - 5 * 60 * 1000; // 5 minutes before expiration
+        const minRefreshTime = 10000; // At least 10 seconds from now
+
+        const timerDelay = Math.max(refreshTime, minRefreshTime);
+
+        const refreshTimer = setTimeout(async () => {
+          console.log("Auto-refreshing token...");
+          try {
+            setRefreshingToken(true);
+            const refreshResult = await refreshToken();
+            if (refreshResult && refreshResult.accessToken) {
+              setToken(refreshResult.accessToken);
+              localStorage.setItem("token", refreshResult.accessToken);
+              console.log("Token auto-refreshed successfully");
+            }
+          } catch (error) {
+            console.error("Error auto-refreshing token:", error);
+          } finally {
+            setRefreshingToken(false);
+          }
+        }, timerDelay);
+
+        return () => clearTimeout(refreshTimer);
+      }
+    } catch (error) {
+      console.error("Error setting up token refresh:", error);
+    }
+  }, [token]);
+
   const login = async (credentials) => {
     try {
       setError(null);
       const response = await loginUser(credentials);
 
-      if (response.accessToken) {
+      if (response && response.accessToken) {
         localStorage.setItem("token", response.accessToken);
         setToken(response.accessToken);
         setCurrentUser({
@@ -81,7 +140,11 @@ export const AuthProvider = ({ children }) => {
       }
       return false;
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const errorMessage =
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials and try again.";
+      setError(errorMessage);
+      console.error("Login error:", err);
       return false;
     }
   };
@@ -92,10 +155,13 @@ export const AuthProvider = ({ children }) => {
       const response = await registerUser(userData);
       return { success: true, message: response.message };
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const errorMessage =
+        err.response?.data?.message || "Registration failed. Please try again.";
+      setError(errorMessage);
+      console.error("Registration error:", err);
       return {
         success: false,
-        message: err.response?.data?.message || "Registration failed",
+        message: errorMessage,
       };
     }
   };
@@ -115,7 +181,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     currentUser,
     token,
-    loading,
+    loading: loading || refreshingToken,
     error,
     login,
     register,

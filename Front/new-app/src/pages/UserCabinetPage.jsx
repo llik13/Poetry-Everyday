@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
 import PageLayout from "../components/layout/PageLayout";
 import UserProfile from "../components/user/UserProfile";
 import UserPoems from "../components/user/UserPoems";
@@ -14,49 +14,93 @@ import { getUserProfile } from "../services/userService";
 import "./UserCabinetPage.css";
 
 const UserCabinetPage = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoading(true);
-        const userData = await getUserProfile();
-        setProfile(userData);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching user profile:", err);
-        setError("Failed to load user profile. Please try again later.");
-        setLoading(false);
-      }
-    };
+  // Define fetchProfile outside useEffect so it can be reused
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const userData = await getUserProfile();
+      setProfile(userData);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+      setError(
+        err.message || "Failed to load user profile. Please try again later."
+      );
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (currentUser) {
       fetchProfile();
     }
   }, [currentUser]);
+
+  const handleRetryFetch = () => {
+    fetchProfile();
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   if (loading) {
     return (
       <PageLayout>
         <div className="loading-container">
           <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">Loading profile data...</span>
           </div>
         </div>
       </PageLayout>
     );
   }
 
-  if (error || !profile) {
+  if (error) {
     return (
       <PageLayout>
         <div className="error-container">
-          <h2>Error</h2>
-          <p>{error || "Failed to load user profile."}</p>
+          <h2>Error Loading Profile</h2>
+          <p>{error}</p>
+          <div className="error-actions">
+            <button className="btn btn-primary" onClick={handleRetryFetch}>
+              Retry
+            </button>
+            <button
+              className="btn btn-secondary ms-3"
+              onClick={handleLogoutClick}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <PageLayout>
+        <div className="error-container">
+          <h2>Profile Not Found</h2>
+          <p>
+            We couldn't find your profile information. Please try logging in
+            again.
+          </p>
+          <Link to="/login" className="btn btn-primary">
+            Go to Login
+          </Link>
         </div>
       </PageLayout>
     );

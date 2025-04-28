@@ -6,6 +6,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Important for cookies
 });
 
 // Add a request interceptor to include auth token for authorized endpoints
@@ -28,6 +29,12 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // Check if there is response data
+    if (!error.response) {
+      console.error("Network error or service unavailable:", error);
+      return Promise.reject(new Error("Network error or service unavailable"));
+    }
+
     const originalRequest = error.config;
 
     // If the error is 401 Unauthorized and we haven't tried to refresh yet

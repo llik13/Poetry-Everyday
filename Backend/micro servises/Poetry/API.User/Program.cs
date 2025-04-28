@@ -22,32 +22,82 @@ namespace API.User
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
+            // Add JWT Authentication configuration to Program.cs
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-              .AddJwtBearer(options =>
-              {
-                  options.RequireHttpsMetadata = false; // Для разработки можно отключить https проверку
-                  options.SaveToken = true;
-                  options.TokenValidationParameters = new TokenValidationParameters
-                  {
-                      ValidateIssuer = true,
-                      ValidateAudience = true,
-                      ValidateLifetime = true,
-                      ValidateIssuerSigningKey = true,
-                      ValidIssuer = builder.Configuration["JWT:Issuer"],
-                      ValidAudience = builder.Configuration["JWT:Audience"],
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
-                      ClockSkew = TimeSpan.Zero // Убираем задержку в 5 минут
-                  };
-              });
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                };
+
+                // Handle authentication errors for API requests
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = async context =>
+                    {
+                        // Skip the default logic
+                        context.HandleResponse();
+
+                        // If it's an API request, return JSON
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+
+                        var result = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            status = 401,
+                            message = "Unauthorized. Authentication required."
+                        });
+
+                        await context.Response.WriteAsync(result);
+                    },
+                    OnForbidden = async context =>
+                    {
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+
+                        var result = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            status = 403,
+                            message = "Forbidden. You don't have permission to access this resource."
+                        });
+
+                        await context.Response.WriteAsync(result);
+                    }
+                };
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000") // Your React app's origin
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials(); // Important for cookies/authentication
+                });
+            });
+
+            builder.Services.AddControllers();
+
+
 
             builder.Services.AddDbContext<IdentityDbContext>(options =>
             {
@@ -87,6 +137,7 @@ namespace API.User
 
             var app = builder.Build();
 
+            app.UseCors("AllowReactApp");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
