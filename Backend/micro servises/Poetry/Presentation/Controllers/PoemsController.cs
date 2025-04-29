@@ -171,5 +171,12 @@ namespace Presentation.Controllers
             var result = await _likeService.IsPoemLikedByUserAsync(id, currentUserId);
             return Ok(result);
         }
+
+        [HttpPost("view/{id}")]
+        public async Task<ActionResult> IncrementViewCount(Guid id)
+        {
+            await _poemService.IncrementViewCountAsync(id);
+            return NoContent();
+        }
     }
 }

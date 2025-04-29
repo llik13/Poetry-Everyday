@@ -92,6 +92,19 @@
       "SwaggerKey": "Poetry"
     },
     {
+      "UpstreamPathTemplate": "/gateway/poems/view/{id}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/poems/view/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "SwaggerKey": "Poetry"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/collections",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "DownstreamPathTemplate": "/api/collections",
