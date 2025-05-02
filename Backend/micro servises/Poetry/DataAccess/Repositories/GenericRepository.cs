@@ -8,10 +8,10 @@ namespace DataAccess.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        protected readonly PoetryDbContext _context;
+        protected readonly DbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
 
-        public GenericRepository(PoetryDbContext context)
+        public GenericRepository(DbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();

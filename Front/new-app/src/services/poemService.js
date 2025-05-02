@@ -108,9 +108,9 @@ export const addComment = async (poemId, commentText) => {
 };
 
 // Delete a comment
-export const deleteComment = async (commentId) => {
+export const deleteComment = async (id) => {
   try {
-    await api.delete(`/poems/comments/${commentId}`);
+    await api.delete(`/poems/comments/${id}`);
     return true;
   } catch (error) {
     throw error;

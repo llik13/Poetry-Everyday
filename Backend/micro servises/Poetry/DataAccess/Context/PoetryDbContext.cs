@@ -8,7 +8,7 @@ namespace DataAccess.Context
     {
         public PoetryDbContext(DbContextOptions<PoetryDbContext> options) : base(options) { }
 
-        public DbSet<Poem> Poems { get; set; }
+        public DbSet<Poem> Poems { get; set; } 
         public DbSet<PoemStatistics> PoemStatistics { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Category> Categories { get; set; }
