@@ -79,12 +79,10 @@ namespace BusinessLogic.Services
         {
             var comment = await _unitOfWork.Comments.GetByIdAsync(id);
             if (comment == null) return false;
-
-            // Объявляем poem заранее, чтобы избежать ошибок области видимости
+            
             var poem = await _unitOfWork.Poems.GetByIdAsync(comment.PoemId);
             if (poem == null) return false;
 
-            // Проверяем, имеет ли пользователь право удалить комментарий
             if (comment.UserId != currentUserId && poem.AuthorId != currentUserId)
             {
                 throw new UnauthorizedAccessException("Only the comment author or poem author can delete this comment");
@@ -93,7 +91,6 @@ namespace BusinessLogic.Services
             // Soft delete the comment
             _unitOfWork.Comments.SoftDelete(comment);
 
-            // Получаем стихотворение с детальной информацией (используем уже объявленную переменную)
             poem = await _unitOfWork.Poems.GetPoemWithDetailsAsync(comment.PoemId);
             if (poem.Statistics != null)
             {
