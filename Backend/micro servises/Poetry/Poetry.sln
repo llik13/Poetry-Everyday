@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OcelotGateWay", "OcelotGate
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoetryTesting", "PoetryTesting\PoetryTesting.csproj", "{987AAA3F-86D5-491B-8AFC-8E6EB433BCB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoetryServiceTest", "PoetryServiceTest\PoetryServiceTest.csproj", "{90B71738-B053-4A00-8073-F204C820BDD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoetryServiceTest", "PoetryServiceTest\PoetryServiceTest.csproj", "{90B71738-B053-4A00-8073-F204C820BDD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTesting", "ApiTesting\ApiTesting.csproj", "{C1384447-084D-4F07-A92C-FECA86756526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{90B71738-B053-4A00-8073-F204C820BDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90B71738-B053-4A00-8073-F204C820BDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90B71738-B053-4A00-8073-F204C820BDD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1384447-084D-4F07-A92C-FECA86756526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1384447-084D-4F07-A92C-FECA86756526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1384447-084D-4F07-A92C-FECA86756526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1384447-084D-4F07-A92C-FECA86756526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
