@@ -55,7 +55,7 @@ namespace PoetryServiceTest.Tests
             Assert.Equal(collection.IsPublic, result.IsPublic);
             Assert.Equal(0, result.PoemCount);
 
-            
+
             collectionRepo.Verify(repo =>
                 repo.AddAsync(It.Is<Collection>(c =>
                     c.Name == collection.Name &&
@@ -74,25 +74,25 @@ namespace PoetryServiceTest.Tests
             // Arrange
             var userId = Guid.NewGuid();
             var collections = new List<Collection> {
-        new Collection
-        {
-            Id = Guid.NewGuid(),
-            Name = "Collection 1",
-            Description = "Description 1",
-            UserId = userId,
-            IsPublic = true,
-            PublishedPoemCount = 3
-        },
-        new Collection
-        {
-            Id = Guid.NewGuid(),
-            Name = "Collection 2",
-            Description = "Description 2",
-            UserId = userId,
-            IsPublic = false,
-            PublishedPoemCount = 5
-        }
-    };
+                new Collection
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Collection 1",
+                    Description = "Description 1",
+                    UserId = userId,
+                    IsPublic = true,
+                    PublishedPoemCount = 3
+                },
+                new Collection
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Collection 2",
+                    Description = "Description 2",
+                    UserId = userId,
+                    IsPublic = false,
+                    PublishedPoemCount = 5
+                }
+            };
 
             var collectionRepo = new Mock<ICollectionRepository>();
             collectionRepo.Setup(repo => repo.GetUserCollectionsAsync(userId))
@@ -157,7 +157,7 @@ namespace PoetryServiceTest.Tests
                 PublishedPoemCount = 3,
                 SavedPoems = savedPoems
             };
- 
+
             var poemDtos = new List<PoemDto>();
             foreach (var poemId in poemIds)
             {
@@ -184,7 +184,6 @@ namespace PoetryServiceTest.Tests
             }
 
             var collectionRepo = new Mock<ICollectionRepository>();
-            // Add a debug setup to see what's being called
             collectionRepo.Setup(repo => repo.GetCollectionWithPoemsAsync(collectionId))
                          .ReturnsAsync(collection);
 
@@ -219,7 +218,7 @@ namespace PoetryServiceTest.Tests
         [Fact]
         public async Task GetCollectionAsync_When_IncorrectCollectionId_ShouldReturnNull()
         {
-            // Assert
+            // Arrange
             var collectionId = Guid.NewGuid();
             var userId = Guid.NewGuid();
 
@@ -237,7 +236,7 @@ namespace PoetryServiceTest.Tests
         [Fact]
         public async Task GetCollectionAsync_When_InappropriateUserIdAndNotPublic()
         {
-            // Assert
+            // Arrange
             var userId = Guid.NewGuid();
             var collectionId = Guid.NewGuid();
 
@@ -246,7 +245,7 @@ namespace PoetryServiceTest.Tests
                 Id = collectionId,
                 Name = "Poetry Favorites",
                 Description = "My favorite poems",
-                UserId = Guid.NewGuid(),
+                UserId = Guid.NewGuid(), // Different from userId
                 IsPublic = false,
                 PublishedPoemCount = 0,
             };
@@ -256,62 +255,45 @@ namespace PoetryServiceTest.Tests
             _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => 
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
                 _collectionService.GetCollectionAsync(collectionId, userId));
-
         }
 
         [Fact]
-        public async Task AddPoemToCollectionAsync_ShouldAddPoemToCollection_WhenUserIdIsValid()
+        public async Task AddPoemToCollectionAsync_ShouldAddPoemToCollection_WhenUserIsOwner()
         {
-            // Assert
-            Guid userId = Guid.NewGuid();
-            Guid collectionId = Guid.NewGuid();
-            Guid poemId = Guid.NewGuid();
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+            var poemAuthorId = Guid.NewGuid(); // Different from userId
 
-            Collection collection = new Collection
+            var collection = new Collection
             {
                 Id = collectionId,
                 Name = "Poetry Favorites",
                 Description = "My favorite poems",
-                UserId = Guid.NewGuid(),
-                IsPublic = false,
-                PublishedPoemCount = 0,
+                UserId = userId, // User is the owner
+                IsPublic = true,
+                PublishedPoemCount = 0
             };
 
-            Poem poem = new Poem
+            var poem = new Poem
             {
                 Id = poemId,
-                Title = $"Poem {poemId}",
+                Title = "Test Poem",
                 Excerpt = "An excerpt",
                 Content = "Poem content",
-                AuthorId = Guid.NewGuid(),
+                AuthorId = poemAuthorId,
                 AuthorName = "Poet Name",
                 IsPublished = true,
-                CreatedAt = DateTime.UtcNow,
                 Statistics = new PoemStatistics
                 {
                     ViewCount = 10,
                     LikeCount = 5,
                     CommentCount = 3,
-                    SaveCount = 2
+                    SaveCount = 0
                 }
-            };
-
-            SavedPoem savedPoem = new SavedPoem
-            {
-                CollectionId = collectionId,
-                PoemId = poemId,
-                SavedAt = DateTime.UtcNow
-            };
-
-            PoemNotification notification = new PoemNotification
-            {
-                UserId = poem.AuthorId,
-                PoemId = poem.Id,
-                Message = $"Someone saved your poem \"{poem.Title}\" to their collection",
-                Type = NotificationType.PoemSaved,
-                IsRead = false
             };
 
             var collectionRepo = new Mock<ICollectionRepository>();
@@ -321,11 +303,10 @@ namespace PoetryServiceTest.Tests
             poemRepo.Setup(repo => repo.GetPoemWithDetailsAsync(poemId)).ReturnsAsync(poem);
 
             var savedPoemRepo = new Mock<ISavedPoemRepository>();
-            savedPoemRepo.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<SavedPoem, bool>>>())).ReturnsAsync(() => null);
-            savedPoemRepo.Setup(repo => repo.AddAsync(savedPoem));
+            savedPoemRepo.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<SavedPoem, bool>>>()))
+                .ReturnsAsync(new List<SavedPoem>());
 
             var notificationRepo = new Mock<IPoemNotificationRepository>();
-            notificationRepo.Setup(repo => repo.AddAsync(notification));
 
             _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
             _mockUnitOfWork.Setup(uow => uow.Poems).Returns(poemRepo.Object);
@@ -334,10 +315,315 @@ namespace PoetryServiceTest.Tests
             _mockUnitOfWork.Setup(uow => uow.CompleteAsync()).ReturnsAsync(1);
 
             // Act
-            var result = _collectionService.AddPoemToCollectionAsync(collectionId, poemId, userId);
+            var result = await _collectionService.AddPoemToCollectionAsync(collectionId, poemId, userId);
 
             // Assert
-            Assert.Equal(result.Result, true);
+            Assert.True(result);
+
+            // Verify saved poem was added
+            savedPoemRepo.Verify(repo => repo.AddAsync(It.Is<SavedPoem>(sp =>
+                sp.CollectionId == collectionId &&
+                sp.PoemId == poemId)), Times.Once);
+
+            // Verify poem statistics were updated
+            Assert.Equal(1, poem.Statistics.SaveCount);
+            poemRepo.Verify(repo => repo.Update(poem), Times.Once);
+
+            // Verify collection published poem count was updated
+            Assert.Equal(1, collection.PublishedPoemCount);
+            collectionRepo.Verify(repo => repo.Update(collection), Times.Once);
+
+            // Verify notification was created for the poem author
+            notificationRepo.Verify(repo => repo.AddAsync(It.Is<PoemNotification>(n =>
+                n.UserId == poemAuthorId &&
+                n.PoemId == poemId &&
+                n.Type == NotificationType.PoemSaved)), Times.Once);
+
+            // Verify changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddPoemToCollectionAsync_WhenNotCollectionOwner_ShouldThrowUnauthorizedAccessException()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionOwnerId = Guid.NewGuid(); // Different from userId
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                Name = "Poetry Favorites",
+                Description = "My favorite poems",
+                UserId = collectionOwnerId, // Different from userId
+                IsPublic = true
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+                _collectionService.AddPoemToCollectionAsync(collectionId, poemId, userId));
+        }
+
+        [Fact]
+        public async Task AddPoemToCollectionAsync_WhenPoemAlreadyInCollection_ShouldReturnTrueWithoutAdding()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                UserId = userId
+            };
+
+            var existingSavedPoem = new SavedPoem
+            {
+                CollectionId = collectionId,
+                PoemId = poemId
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            var poemRepo = new Mock<IPoemRepository>();
+            poemRepo.Setup(repo => repo.GetPoemWithDetailsAsync(poemId))
+                .ReturnsAsync(new Poem { Id = poemId });
+
+            var savedPoemRepo = new Mock<ISavedPoemRepository>();
+            savedPoemRepo.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<SavedPoem, bool>>>()))
+                .ReturnsAsync(new List<SavedPoem> { existingSavedPoem });
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.Poems).Returns(poemRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.SavedPoems).Returns(savedPoemRepo.Object);
+
+            // Act
+            var result = await _collectionService.AddPoemToCollectionAsync(collectionId, poemId, userId);
+
+            // Assert
+            Assert.True(result);
+
+            // Verify no saved poem was added
+            savedPoemRepo.Verify(repo => repo.AddAsync(It.IsAny<SavedPoem>()), Times.Never);
+
+            // Verify no changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task RemovePoemFromCollectionAsync_ShouldRemovePoemAndUpdateStatistics()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                UserId = userId,
+                PublishedPoemCount = 1
+            };
+
+            var savedPoem = new SavedPoem
+            {
+                Id = Guid.NewGuid(),
+                CollectionId = collectionId,
+                PoemId = poemId
+            };
+
+            var poem = new Poem
+            {
+                Id = poemId,
+                IsPublished = true,
+                Statistics = new PoemStatistics
+                {
+                    SaveCount = 1
+                }
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            var poemRepo = new Mock<IPoemRepository>();
+            poemRepo.Setup(repo => repo.GetByIdAsync(poemId)).ReturnsAsync(poem);
+
+            var savedPoemRepo = new Mock<ISavedPoemRepository>();
+            savedPoemRepo.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<SavedPoem, bool>>>()))
+                .ReturnsAsync(new List<SavedPoem> { savedPoem });
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.Poems).Returns(poemRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.SavedPoems).Returns(savedPoemRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.CompleteAsync()).ReturnsAsync(1);
+
+            // Act
+            var result = await _collectionService.RemovePoemFromCollectionAsync(collectionId, poemId, userId);
+
+            // Assert
+            Assert.True(result);
+
+            // Verify saved poem was removed
+            savedPoemRepo.Verify(repo => repo.Remove(savedPoem), Times.Once);
+
+            // Verify poem statistics were updated
+            Assert.Equal(0, poem.Statistics.SaveCount);
+            poemRepo.Verify(repo => repo.Update(poem), Times.Once);
+
+            // Verify collection published poem count was updated
+            Assert.Equal(0, collection.PublishedPoemCount);
+            collectionRepo.Verify(repo => repo.Update(collection), Times.Once);
+
+            // Verify changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task RemovePoemFromCollectionAsync_WhenNotCollectionOwner_ShouldThrowUnauthorizedAccessException()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionOwnerId = Guid.NewGuid(); // Different from userId
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                UserId = collectionOwnerId // Different from userId
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+                _collectionService.RemovePoemFromCollectionAsync(collectionId, poemId, userId));
+        }
+
+        [Fact]
+        public async Task RemovePoemFromCollectionAsync_WhenPoemNotInCollection_ShouldReturnFalse()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+            var poemId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                UserId = userId
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            var savedPoemRepo = new Mock<ISavedPoemRepository>();
+            savedPoemRepo.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<SavedPoem, bool>>>()))
+                .ReturnsAsync(new List<SavedPoem>());
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.SavedPoems).Returns(savedPoemRepo.Object);
+
+            // Act
+            var result = await _collectionService.RemovePoemFromCollectionAsync(collectionId, poemId, userId);
+
+            // Assert
+            Assert.False(result);
+
+            // Verify no changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteCollectionAsync_ShouldDeleteCollection()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                Name = "Collection to Delete",
+                UserId = userId
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+            _mockUnitOfWork.Setup(uow => uow.CompleteAsync()).ReturnsAsync(1);
+
+            // Act
+            var result = await _collectionService.DeleteCollectionAsync(collectionId, userId);
+
+            // Assert
+            Assert.True(result);
+
+            // Verify collection was removed (soft deleted)
+            collectionRepo.Verify(repo => repo.Remove(collection), Times.Once);
+
+            // Verify changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteCollectionAsync_WhenNotCollectionOwner_ShouldThrowUnauthorizedAccessException()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionOwnerId = Guid.NewGuid(); // Different from userId
+            var collectionId = Guid.NewGuid();
+
+            var collection = new Collection
+            {
+                Id = collectionId,
+                Name = "Collection to Delete",
+                UserId = collectionOwnerId // Different from userId
+            };
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync(collection);
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+                _collectionService.DeleteCollectionAsync(collectionId, userId));
+        }
+
+        [Fact]
+        public async Task DeleteCollectionAsync_WhenCollectionNotFound_ShouldReturnFalse()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var collectionId = Guid.NewGuid();
+
+            var collectionRepo = new Mock<ICollectionRepository>();
+            collectionRepo.Setup(repo => repo.GetByIdAsync(collectionId)).ReturnsAsync((Collection)null);
+
+            _mockUnitOfWork.Setup(uow => uow.Collections).Returns(collectionRepo.Object);
+
+            // Act
+            var result = await _collectionService.DeleteCollectionAsync(collectionId, userId);
+
+            // Assert
+            Assert.False(result);
+
+            // Verify no changes were saved
+            _mockUnitOfWork.Verify(uow => uow.CompleteAsync(), Times.Never);
         }
     }
 }
