@@ -1,0 +1,162 @@
+.poem-form-container {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.poem-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  font-size: 1.6rem;
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg);
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.2);
+}
+
+.poem-content {
+  font-family: var(--font-poetry);
+  font-size: 1.8rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.form-text {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: 1.3rem;
+  color: var(--color-text-light);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.input-group {
+  display: flex;
+  margin-bottom: var(--spacing-xs);
+}
+
+.btn-add {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-medium);
+  border: 1px solid var(--color-bg-dark);
+  border-left: none;
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-add:hover:not(:disabled) {
+  background-color: var(--color-bg-dark);
+}
+
+.btn-add:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-group .form-control {
+  border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+  flex-grow: 1;
+}
+
+.tags-list,
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.tag,
+.category {
+  background-color: rgba(139, 94, 60, 0.1);
+  color: var(--color-primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-remove-tag,
+.btn-remove-category {
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.btn-remove-tag:hover,
+.btn-remove-category:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--color-danger);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-bg-dark);
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .poem-form-container {
+    padding: var(--spacing-md);
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

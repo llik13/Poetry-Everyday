@@ -289,3 +289,12 @@ export const deleteCollection = async (collectionId) => {
     throw error;
   }
 };
+
+export const getPoem = async (poemId) => {
+  try {
+    const response = await api.get(`/mypoems/${poemId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

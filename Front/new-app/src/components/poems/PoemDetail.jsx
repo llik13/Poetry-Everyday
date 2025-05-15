@@ -2,14 +2,16 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import CommentSection from "./CommentSection";
+import CollectionModal from "./CollectionModal";
 import { likePoem, unlikePoem } from "../../services/poemService";
 import "./PoemDetail.css";
 
-const PoemDetail = ({ poem, onSaveToCollection }) => {
+const PoemDetail = ({ poem }) => {
   const { isAuthenticated, currentUser } = useContext(AuthContext);
   const [liked, setLiked] = useState(poem.isLikedByCurrentUser);
   const [likeCount, setLikeCount] = useState(poem.statistics.likeCount);
-  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -46,7 +48,7 @@ const PoemDetail = ({ poem, onSaveToCollection }) => {
       return;
     }
 
-    setShowSaveModal(true);
+    setShowCollectionModal(true);
   };
 
   const handleShareClick = () => {
@@ -56,6 +58,11 @@ const PoemDetail = ({ poem, onSaveToCollection }) => {
 
     // Show success notification
     alert("Link copied to clipboard!");
+  };
+
+  const handleCollectionSuccess = () => {
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
   return (
@@ -104,51 +111,23 @@ const PoemDetail = ({ poem, onSaveToCollection }) => {
         </button>
       </div>
 
+      {savedSuccess && (
+        <div className="save-success-message">
+          Poem saved to collection successfully!
+        </div>
+      )}
+
       {poem.comments && (
         <CommentSection comments={poem.comments} poemId={poem.id} />
       )}
 
-      {/* Save to Collection Modal */}
-      {showSaveModal && (
-        <div className="modal show-modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4>Save to Collection</h4>
-              <button
-                className="close-modal"
-                onClick={() => setShowSaveModal(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              {/* Collection list component would go here */}
-              <p>Select a collection to save this poem:</p>
-              <div className="collection-list">
-                {/* This would be populated from an API call */}
-                <p>Loading collections...</p>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                className="btn btn-outline"
-                onClick={() => setShowSaveModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  onSaveToCollection && onSaveToCollection(poem.id);
-                  setShowSaveModal(false);
-                }}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Collection Modal */}
+      <CollectionModal
+        isOpen={showCollectionModal}
+        onClose={() => setShowCollectionModal(false)}
+        poemId={poem.id}
+        onSuccess={handleCollectionSuccess}
+      />
     </div>
   );
 };

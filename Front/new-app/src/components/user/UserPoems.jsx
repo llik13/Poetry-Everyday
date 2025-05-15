@@ -86,9 +86,9 @@ const UserPoems = () => {
             <Button to="/cabinet/drafts" variant="primary">
               Go to Your Drafts
             </Button>
-            <Button to="/cabinet/create-poem" variant="outline">
+            <Link to="/cabinet/create-poem" className="btn btn-primary">
               Create New Poem
-            </Button>
+            </Link>
           </div>
         </div>
       ) : (

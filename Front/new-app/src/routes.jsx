@@ -8,6 +8,7 @@ import PoemDetailPage from "./pages/PoemDetailPage";
 import UserCabinetPage from "./pages/UserCabinetPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import CreatePoemPage from "./pages/CreatePoemPage"; // Import the new page
 
 // Auth protected route component
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -29,6 +30,24 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <UserCabinetPage />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Create/Edit Poem Routes - Protected */}
+      <Route
+        path="/cabinet/create-poem"
+        element={
+          <PrivateRoute>
+            <CreatePoemPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/cabinet/edit-poem/:id"
+        element={
+          <PrivateRoute>
+            <CreatePoemPage />
           </PrivateRoute>
         }
       />

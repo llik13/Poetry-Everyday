@@ -1,0 +1,60 @@
+.create-poem-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.create-poem-header {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.create-poem-header h2 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+
+.create-poem-header p {
+  font-size: 1.6rem;
+  color: var(--color-text-light);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-message {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  font-size: 1.6rem;
+}
+
+.success-message {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--color-success);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  font-size: 1.6rem;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+@media (max-width: 768px) {
+  .create-poem-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .create-poem-container {
+    padding: var(--spacing-sm);
+  }
+}

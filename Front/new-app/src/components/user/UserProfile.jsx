@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// Удалите эту строку, так как ничего из react-router-dom не используется
+// import { Something, Link, SomethingElse } from "react-router-dom";
 import Button from "../common/Button";
 import "./UserProfile.css";
 
@@ -63,7 +64,7 @@ const UserProfile = ({ profile }) => {
           Edit Profile
         </Button>
 
-        <Button variant="primary" size="sm" to="/cabinet/drafts">
+        <Button variant="primary" size="sm" to="/cabinet/create-poem">
           Write New Poem
         </Button>
       </div>

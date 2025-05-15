@@ -208,6 +208,63 @@
   font-style: italic;
 }
 
+.table-responsive {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.table tbody tr:hover {
+  background-color: var(--color-bg-light);
+}
+
+.table a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.table a:hover {
+  text-decoration: underline;
+}
+
+/* Анимация для уведомлений */
+.alert {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Дополнительные стили для модальных окон и форм */
+.form-actions button {
+  min-width: 120px;
+}
+
+/* Отзывчивый дизайн для таблиц на мобильных устройствах */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: var(--spacing-xs);
+    font-size: 1.4rem;
+  }
+
+  .btn-remove-from-collection {
+    padding: 0.2rem 0.4rem;
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 992px) {
   .collections-container {
     grid-template-columns: 1fr;

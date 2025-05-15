@@ -90,9 +90,9 @@ const UserDrafts = () => {
       {drafts.length === 0 ? (
         <div className="no-drafts">
           <p>You don't have any drafts yet. Start writing your first poem!</p>
-          <Button to="/cabinet/create-poem" variant="primary" size="lg">
+          <Link to="/cabinet/create-poem" className="btn btn-primary">
             Create New Poem
-          </Button>
+          </Link>
         </div>
       ) : (
         <div className="drafts-list">

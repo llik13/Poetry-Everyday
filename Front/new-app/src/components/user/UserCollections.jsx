@@ -5,6 +5,7 @@ import {
   getCollection,
   createCollection,
   deleteCollection,
+  removePoemFromCollection,
 } from "../../services/poemService";
 import Button from "../common/Button";
 import "./UserCollections.css";
@@ -14,6 +15,7 @@ const UserCollections = () => {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [actionStatus, setActionStatus] = useState({ type: "", message: "" });
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDesc, setNewCollectionDesc] = useState("");
@@ -65,10 +67,22 @@ const UserCollections = () => {
       setNewCollectionDesc("");
       setIsPublic(false);
       setShowCreateForm(false);
+
+      setActionStatus({
+        type: "success",
+        message: "Collection created successfully!",
+      });
+
+      // Clear status after 3 seconds
+      setTimeout(() => setActionStatus({ type: "", message: "" }), 3000);
+
       fetchCollections();
     } catch (err) {
       console.error("Error creating collection:", err);
-      setError("Failed to create collection. Please try again.");
+      setActionStatus({
+        type: "error",
+        message: "Failed to create collection. Please try again.",
+      });
     }
   };
 
@@ -81,12 +95,74 @@ const UserCollections = () => {
       try {
         await deleteCollection(collectionId);
         setCollections(collections.filter((c) => c.id !== collectionId));
+
         if (selectedCollection && selectedCollection.id === collectionId) {
           setSelectedCollection(null);
         }
+
+        setActionStatus({
+          type: "success",
+          message: "Collection deleted successfully!",
+        });
+
+        // Clear status after 3 seconds
+        setTimeout(() => setActionStatus({ type: "", message: "" }), 3000);
       } catch (err) {
         console.error("Error deleting collection:", err);
-        setError("Failed to delete collection. Please try again.");
+        setActionStatus({
+          type: "error",
+          message: "Failed to delete collection. Please try again.",
+        });
+      }
+    }
+  };
+
+  const handleRemovePoemFromCollection = async (collectionId, poemId) => {
+    if (
+      window.confirm(
+        "Are you sure you want to remove this poem from the collection?"
+      )
+    ) {
+      try {
+        await removePoemFromCollection(collectionId, poemId);
+
+        // Update the local state to reflect the change
+        if (selectedCollection && selectedCollection.id === collectionId) {
+          setSelectedCollection({
+            ...selectedCollection,
+            poems: selectedCollection.poems.filter(
+              (poem) => poem.id !== poemId
+            ),
+            poemCount: selectedCollection.poemCount - 1,
+          });
+        }
+
+        // Also update the collections list
+        setCollections(
+          collections.map((collection) => {
+            if (collection.id === collectionId) {
+              return {
+                ...collection,
+                poemCount: collection.poemCount - 1,
+              };
+            }
+            return collection;
+          })
+        );
+
+        setActionStatus({
+          type: "success",
+          message: "Poem removed from collection successfully!",
+        });
+
+        // Clear status after 3 seconds
+        setTimeout(() => setActionStatus({ type: "", message: "" }), 3000);
+      } catch (err) {
+        console.error("Error removing poem from collection:", err);
+        setActionStatus({
+          type: "error",
+          message: "Failed to remove poem from collection. Please try again.",
+        });
       }
     }
   };
@@ -114,6 +190,16 @@ const UserCollections = () => {
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
+
+      {actionStatus.message && (
+        <div
+          className={`alert ${
+            actionStatus.type === "success" ? "alert-success" : "alert-danger"
+          }`}
+        >
+          {actionStatus.message}
+        </div>
+      )}
 
       {showCreateForm && (
         <div className="create-collection-form">
@@ -245,13 +331,12 @@ const UserCollections = () => {
                             <td>
                               <button
                                 className="btn-remove-from-collection"
-                                onClick={() => {
-                                  // This would use the removePoemFromCollection function
-                                  console.log(
-                                    "Remove poem from collection:",
+                                onClick={() =>
+                                  handleRemovePoemFromCollection(
+                                    selectedCollection.id,
                                     poem.id
-                                  );
-                                }}
+                                  )
+                                }
                               >
                                 <i className="fas fa-times"></i> Remove
                               </button>

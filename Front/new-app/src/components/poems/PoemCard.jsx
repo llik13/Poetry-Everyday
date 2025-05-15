@@ -31,13 +31,13 @@ const PoemCard = ({ poem }) => {
     <div className="card poem-card h-100">
       <div className="card-body">
         <h5 className="card-title">{poem.title}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">
-          <Link to={`/author/${poem.authorId}`}>{poem.authorName}</Link>
-        </h6>
+        <h6 className="card-subtitle mb-2 text-muted">{poem.authorName}</h6>
         <pre className="poem">{createPreview(poem.content)}</pre>
-        <Link to={`/poems/${poem.id}`} className="poem-btn">
-          Read more
-        </Link>
+        <div className="read-more-container">
+          <Link to={`/poems/${poem.id}`} className="poem-btn">
+            Read more
+          </Link>
+        </div>
         <div className="poem-stats">
           <span>
             <i className="fas fa-eye"></i> {poem.statistics?.viewCount || 0}

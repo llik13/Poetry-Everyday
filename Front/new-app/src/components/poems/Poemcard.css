@@ -2,6 +2,7 @@
   margin-bottom: var(--spacing-md);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
+  cursor: default; /* Default cursor for the card */
 }
 
 .poem-card:hover {
@@ -20,6 +21,7 @@
   height: 12rem;
   overflow: hidden;
   position: relative;
+  cursor: default; /* Default cursor for poem text */
 }
 
 .poem::after {
@@ -32,13 +34,18 @@
   background: linear-gradient(transparent, var(--color-bg));
 }
 
+.read-more-container {
+  text-align: right;
+}
+
 .poem-btn {
   text-decoration: none;
   color: var(--color-text-muted);
   font-style: italic;
   margin-bottom: 0.5rem;
-  display: block;
-  text-align: right;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer; /* Pointer cursor only for Read more link */
 }
 
 .poem-btn:hover {
