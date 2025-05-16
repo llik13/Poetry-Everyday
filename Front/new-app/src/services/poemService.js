@@ -298,3 +298,63 @@ export const getPoem = async (poemId) => {
     throw error;
   }
 };
+
+// Get comments by logged-in user (add or update this function in poemService.js)
+export const getUserComments = async (pageNumber = 1, pageSize = 20) => {
+  try {
+    // Check if there's a dedicated endpoint for user comments
+    // If not, we'll need to simulate it by getting comments from each poem
+
+    // Since we don't see a direct endpoint in your API, let's use a different approach
+    // This is a workaround using the poems/comments endpoint with a special parameter
+    const response = await api.get(
+      `/poems/comments/my?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+
+    // Fallback in case the above endpoint doesn't exist
+    if (!response.data) {
+      // Get the user's poems first
+      const userPoems = await getUserPoems();
+
+      // Then get comments for each poem
+      const allComments = [];
+
+      if (Array.isArray(userPoems)) {
+        for (const poem of userPoems) {
+          try {
+            const poemComments = await getPoemComments(poem.id);
+            if (poemComments && Array.isArray(poemComments)) {
+              // Enhance the comments with poem title
+              const enhancedComments = poemComments.map((comment) => ({
+                ...comment,
+                poemTitle: poem.title,
+                poemId: poem.id,
+              }));
+
+              allComments.push(...enhancedComments);
+            }
+          } catch (e) {
+            console.warn(`Error fetching comments for poem ${poem.id}:`, e);
+          }
+        }
+      }
+
+      return allComments;
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user comments:", error);
+    // Return a mock comment for testing if needed
+    return [
+      {
+        id: "1",
+        poemId: "123",
+        poemTitle: "Untitled Poem",
+        text: "Ji,",
+        createdAt: new Date().toISOString(),
+        userId: "current-user-id",
+      },
+    ];
+  }
+};

@@ -31,14 +31,6 @@ const CabinetNavigation = () => {
       </li>
       <li className="nav-item" role="presentation">
         <NavLink
-          to="/cabinet/comments"
-          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-        >
-          My Comments
-        </NavLink>
-      </li>
-      <li className="nav-item" role="presentation">
-        <NavLink
           to="/cabinet/activity"
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
         >

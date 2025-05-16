@@ -5,7 +5,6 @@ import UserProfile from "../components/user/UserProfile";
 import UserPoems from "../components/user/UserPoems";
 import UserDrafts from "../components/user/UserDrafts";
 import UserCollections from "../components/user/UserCollections";
-import UserComments from "../components/user/UserComments";
 import UserActivity from "../components/user/UserActivity";
 import UserSettings from "../components/user/UserSettings";
 import CabinetNavigation from "../components/user/CabinetNavigation";
@@ -122,7 +121,6 @@ const UserCabinetPage = () => {
           <Route path="/poems" element={<UserPoems />} />
           <Route path="/drafts" element={<UserDrafts />} />
           <Route path="/collections" element={<UserCollections />} />
-          <Route path="/comments" element={<UserComments />} />
           <Route path="/activity" element={<UserActivity />} />
           <Route
             path="/settings"
