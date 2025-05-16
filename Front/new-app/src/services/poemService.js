@@ -77,14 +77,103 @@ export const getPoemContent = async (poemId) => {
 export const getPoemComments = async (
   poemId,
   pageNumber = 1,
-  pageSize = 20
+  pageSize = 10
 ) => {
   try {
+    console.log(
+      `API Call: Getting comments for poem ${poemId}, page ${pageNumber}, size ${pageSize}`
+    );
+
     const response = await api.get(
       `/poems/comments/${poemId}?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
-    return response.data;
+
+    const data = response.data;
+
+    // Store the original total count from headers if available
+    let totalCount = parseInt(response.headers["x-total-count"]) || null;
+
+    // If the API doesn't return a paginated structure,
+    // let's wrap it in one to maintain consistency
+    if (Array.isArray(data)) {
+      console.log(`Received ${data.length} comments as array`);
+
+      // Check if the API might have more pages but didn't send the count
+      const mightHaveMorePages = data.length === pageSize;
+
+      // If we don't have a total count but we filled a page, make a separate request
+      // to get the total count (only if this is the first page)
+      if (totalCount === null && mightHaveMorePages && pageNumber === 1) {
+        try {
+          // Try to make a HEAD request to get just the count
+          const countResponse = await api.head(`/poems/comments/${poemId}`);
+          totalCount = parseInt(countResponse.headers["x-total-count"]);
+          console.log(`Retrieved total count via HEAD: ${totalCount}`);
+        } catch (countError) {
+          console.log("Failed to retrieve total count via HEAD request");
+        }
+      }
+
+      // If we still don't have the count, estimate based on current page data
+      if (totalCount === null) {
+        if (mightHaveMorePages) {
+          // If we filled a page, assume there's at least one more page
+          totalCount = pageNumber * pageSize + 1;
+        } else {
+          // If we didn't fill a page, this is probably all the comments
+          totalCount = (pageNumber - 1) * pageSize + data.length;
+        }
+      }
+
+      // Create a paginated structure from the array
+      return {
+        items: data,
+        totalCount: totalCount,
+        totalPages: Math.max(1, Math.ceil(totalCount / pageSize)),
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        hasPreviousPage: pageNumber > 1,
+        hasNextPage: pageNumber * pageSize < totalCount,
+      };
+    }
+
+    // If it's already in a paginated structure
+    if (data && typeof data === "object") {
+      // Use the header count if available, otherwise use the count in the data
+      if (totalCount === null) {
+        totalCount = data.totalCount || data.items?.length || 0;
+      }
+
+      console.log(`Received paginated data with total count: ${totalCount}`);
+
+      // Make sure all required fields exist
+      return {
+        items: data.items || data.results || [],
+        totalCount: totalCount,
+        totalPages:
+          data.totalPages || Math.max(1, Math.ceil(totalCount / pageSize)),
+        pageNumber: data.pageNumber || pageNumber,
+        pageSize: data.pageSize || pageSize,
+        hasPreviousPage: data.hasPreviousPage || pageNumber > 1,
+        hasNextPage: data.hasNextPage || pageNumber * pageSize < totalCount,
+      };
+    }
+
+    // Fallback for unexpected response formats
+    console.log(
+      "Unexpected data format from API, falling back to simple array"
+    );
+    return {
+      items: [],
+      totalCount: 0,
+      totalPages: 1,
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      hasPreviousPage: false,
+      hasNextPage: false,
+    };
   } catch (error) {
+    console.error("Error fetching poem comments:", error);
     throw error;
   }
 };
@@ -296,65 +385,5 @@ export const getPoem = async (poemId) => {
     return response.data;
   } catch (error) {
     throw error;
-  }
-};
-
-// Get comments by logged-in user (add or update this function in poemService.js)
-export const getUserComments = async (pageNumber = 1, pageSize = 20) => {
-  try {
-    // Check if there's a dedicated endpoint for user comments
-    // If not, we'll need to simulate it by getting comments from each poem
-
-    // Since we don't see a direct endpoint in your API, let's use a different approach
-    // This is a workaround using the poems/comments endpoint with a special parameter
-    const response = await api.get(
-      `/poems/comments/my?pageNumber=${pageNumber}&pageSize=${pageSize}`
-    );
-
-    // Fallback in case the above endpoint doesn't exist
-    if (!response.data) {
-      // Get the user's poems first
-      const userPoems = await getUserPoems();
-
-      // Then get comments for each poem
-      const allComments = [];
-
-      if (Array.isArray(userPoems)) {
-        for (const poem of userPoems) {
-          try {
-            const poemComments = await getPoemComments(poem.id);
-            if (poemComments && Array.isArray(poemComments)) {
-              // Enhance the comments with poem title
-              const enhancedComments = poemComments.map((comment) => ({
-                ...comment,
-                poemTitle: poem.title,
-                poemId: poem.id,
-              }));
-
-              allComments.push(...enhancedComments);
-            }
-          } catch (e) {
-            console.warn(`Error fetching comments for poem ${poem.id}:`, e);
-          }
-        }
-      }
-
-      return allComments;
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user comments:", error);
-    // Return a mock comment for testing if needed
-    return [
-      {
-        id: "1",
-        poemId: "123",
-        poemTitle: "Untitled Poem",
-        text: "Ji,",
-        createdAt: new Date().toISOString(),
-        userId: "current-user-id",
-      },
-    ];
   }
 };

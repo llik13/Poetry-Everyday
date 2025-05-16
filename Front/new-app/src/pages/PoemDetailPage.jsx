@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "../components/layout/PageLayout";
 import PoemDetail from "../components/poems/PoemDetail";
-import { getPoemDetails, addPoemToCollection } from "../services/poemService";
+import { getPoemDetails, getPoemComments } from "../services/poemService";
 import AuthContext from "../context/AuthContext";
 import "./PoemDetailPage.css";
 
@@ -12,6 +12,7 @@ const PoemDetailPage = () => {
   const navigate = useNavigate();
 
   const [poem, setPoem] = useState(null);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,7 +20,22 @@ const PoemDetailPage = () => {
     const fetchPoemDetails = async () => {
       try {
         setLoading(true);
+
+        // Get basic poem details
         const poemData = await getPoemDetails(id);
+
+        // Fetch initial comments (first page)
+        const commentsData = await getPoemComments(id, 1, 10);
+
+        // Update the poem data
+        if (Array.isArray(commentsData)) {
+          setComments(commentsData);
+          poemData.comments = commentsData;
+        } else if (commentsData && typeof commentsData === "object") {
+          setComments(commentsData.items || []);
+          poemData.comments = commentsData.items || [];
+        }
+
         setPoem(poemData);
         setLoading(false);
       } catch (err) {
@@ -35,23 +51,6 @@ const PoemDetailPage = () => {
       fetchPoemDetails();
     }
   }, [id]);
-
-  const handleSaveToCollection = async (poemId) => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
-    try {
-      // This would typically show a collection selection UI
-      // For now, we're just passing the poem ID
-      await addPoemToCollection(poemId);
-      // Show success message
-    } catch (err) {
-      console.error("Error saving poem to collection:", err);
-      // Show error message
-    }
-  };
 
   if (loading) {
     return (
@@ -81,7 +80,7 @@ const PoemDetailPage = () => {
 
   return (
     <PageLayout>
-      <PoemDetail poem={poem} onSaveToCollection={handleSaveToCollection} />
+      <PoemDetail poem={poem} />
     </PageLayout>
   );
 };

@@ -65,6 +65,25 @@ const PoemDetail = ({ poem }) => {
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
+  // Ensure we always have the total number of comments from statistics
+  // This is critical for maintaining consistent comment count across pagination
+  const totalCommentCount =
+    poem.statistics && poem.statistics.commentCount !== undefined
+      ? poem.statistics.commentCount
+      : poem.comments
+      ? poem.comments.length
+      : 0;
+
+  // Debug logging for comment count
+  console.log(
+    `PoemDetail: Total comment count from statistics: ${totalCommentCount}`
+  );
+  console.log(
+    `PoemDetail: Initial comments length: ${
+      poem.comments ? poem.comments.length : 0
+    }`
+  );
+
   return (
     <div className="poem-container">
       <div className="poem-header">
@@ -77,7 +96,7 @@ const PoemDetail = ({ poem }) => {
           <span>Published: {formatDate(poem.createdAt)}</span> •
           <span>Views: {poem.statistics.viewCount}</span> •
           <span>Likes: {likeCount}</span> •
-          <span>Comments: {poem.statistics.commentCount}</span>
+          <span>Comments: {totalCommentCount}</span>
         </div>
 
         {poem.tags && poem.tags.length > 0 && (
@@ -117,9 +136,12 @@ const PoemDetail = ({ poem }) => {
         </div>
       )}
 
-      {poem.comments && (
-        <CommentSection comments={poem.comments} poemId={poem.id} />
-      )}
+      {/* Pass the correct comment count from statistics */}
+      <CommentSection
+        initialComments={poem.comments || []}
+        poemId={poem.id}
+        totalCommentCount={totalCommentCount}
+      />
 
       {/* Collection Modal */}
       <CollectionModal
