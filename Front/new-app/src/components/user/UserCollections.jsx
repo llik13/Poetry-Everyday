@@ -137,7 +137,7 @@ const UserCollections = () => {
           });
         }
 
-        // Also update the collections list
+        // Update the collections list with updated poem count
         setCollections(
           collections.map((collection) => {
             if (collection.id === collectionId) {

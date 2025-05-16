@@ -4,6 +4,9 @@ import {
   getUserPoems,
   unpublishPoem,
   deletePoem,
+  getUserCollections,
+  getCollection,
+  removePoemFromCollection,
 } from "../../services/poemService";
 import Button from "../common/Button";
 import "./UserPoems.css";
@@ -32,7 +35,41 @@ const UserPoems = () => {
 
   const handleUnpublish = async (poemId) => {
     try {
+      // First, get all user collections to check which ones contain the poem
+      const userCollections = await getUserCollections();
+
+      // Unpublish the poem
       await unpublishPoem(poemId);
+
+      // For each collection that contains this poem, remove it
+      if (userCollections && userCollections.length > 0) {
+        // We need to fetch details for each collection to see if it contains the poem
+        for (const collection of userCollections) {
+          try {
+            const collectionDetails = await getCollection(collection.id);
+            if (collectionDetails && collectionDetails.poems) {
+              // Check if this collection contains the poem
+              const hasPoemInCollection = collectionDetails.poems.some(
+                (poem) => poem.id === poemId
+              );
+
+              // If the poem is in this collection, remove it
+              if (hasPoemInCollection) {
+                await removePoemFromCollection(collection.id, poemId);
+                console.log(
+                  `Removed unpublished poem from collection: ${collection.name}`
+                );
+              }
+            }
+          } catch (collectionError) {
+            console.error(
+              `Error checking collection ${collection.id}:`,
+              collectionError
+            );
+          }
+        }
+      }
+
       // Move to drafts by removing from the published list
       setPoems(poems.filter((poem) => poem.id !== poemId));
     } catch (err) {

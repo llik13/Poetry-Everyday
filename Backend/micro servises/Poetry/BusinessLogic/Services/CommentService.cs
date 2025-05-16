@@ -101,5 +101,54 @@ namespace BusinessLogic.Services
             await _unitOfWork.CompleteAsync();
             return true;
         }
+
+        public async Task<PaginatedResult<CommentDto>> GetCommentsByAuthorPoemsAsync(Guid authorId, int page = 1, int pageSize = 20)
+        {
+            // Получаем все стихи автора
+            var poems = await _unitOfWork.Poems.GetPoemsByAuthorIdAsync(authorId);
+
+            // Извлекаем их ID
+            var poemIds = poems.Select(p => p.Id).ToList();
+
+            // Создаем список для хранения всех комментариев
+            var allComments = new List<CommentDto>();
+
+            // Для каждого стихотворения получаем комментарии
+            foreach (var poemId in poemIds)
+            {
+                var comments = await _unitOfWork.Comments.FindAsync(c => c.PoemId == poemId);
+
+                allComments.AddRange(comments.Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    PoemId = c.PoemId,
+                    UserId = c.UserId,
+                    UserName = c.UserName,
+                    Text = c.Text,
+                    CreatedAt = c.CreatedAt
+                }));
+            }
+
+            // Сортируем по дате создания (сначала новые) и применяем пагинацию
+            var totalCount = allComments.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var paginatedComments = allComments
+                .OrderByDescending(c => c.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PaginatedResult<CommentDto>
+            {
+                Items = paginatedComments,
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages
+            };
+        }
+
+
     }
 }

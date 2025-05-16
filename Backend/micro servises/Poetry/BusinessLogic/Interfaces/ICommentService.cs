@@ -12,6 +12,7 @@ namespace BusinessLogic.Interfaces
         Task<CommentDto> AddCommentAsync(CreateCommentDto commentDto);
         Task<IEnumerable<CommentDto>> GetCommentsByPoemIdAsync(Guid poemId, int pageNumber, int pageSize);
         Task<bool> DeleteCommentAsync(Guid id, Guid currentUserId);
+        Task<PaginatedResult<CommentDto>> GetCommentsByAuthorPoemsAsync(Guid authorId, int page = 1, int pageSize = 20);
     }
 
 }

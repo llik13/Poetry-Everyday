@@ -12,10 +12,12 @@ namespace Presentation.Controllers
     public class UserPoemsController : ControllerBase
     {
         private readonly IPoemService _poemService;
+        private readonly ICommentService _commentService;
 
-        public UserPoemsController(IPoemService poemService)
+        public UserPoemsController(IPoemService poemService, ICommentService commentService)
         {
             _poemService = poemService;
+            _commentService = commentService;
         }
 
 
@@ -189,6 +191,16 @@ namespace Presentation.Controllers
 
             var updatedPoem = await _poemService.UpdatePoemAsync(updateDto, currentUserId);
             return Ok(updatedPoem);
+        }
+
+        [HttpGet("comments")]
+        public async Task<ActionResult<PaginatedResult<CommentDto>>> GetAllMyPoemComments([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        {
+            var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var result = await _commentService.GetCommentsByAuthorPoemsAsync(currentUserId, page, pageSize);
+
+            return Ok(result);
         }
     }
 }

@@ -170,15 +170,15 @@ namespace BusinessLogic.Services
             var savedPoem = savedPoems.FirstOrDefault();
             if (savedPoem == null) return false;
 
-            // Get the poem to check if it's published
-            var poem = await _unitOfWork.Poems.GetByIdAsync(poemId);
-
             // Remove from collection
             _unitOfWork.SavedPoems.Remove(savedPoem);
 
-            // Update save count
+            // Get the poem to check if it's published - this might be null if poem was deleted
+            var poem = await _unitOfWork.Poems.GetByIdAsync(poemId);
+
             if (poem != null && poem.Statistics != null)
             {
+                // Update save count
                 poem.Statistics.SaveCount = Math.Max(0, poem.Statistics.SaveCount - 1);
                 _unitOfWork.Poems.Update(poem);
 
@@ -188,6 +188,13 @@ namespace BusinessLogic.Services
                     collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
                     _unitOfWork.Collections.Update(collection);
                 }
+            }
+            else
+            {
+                // If poem not found, assume it was previously published and decrement count anyway
+                // This ensures we update the count even if the poem was deleted
+                collection.PublishedPoemCount = Math.Max(0, collection.PublishedPoemCount - 1);
+                _unitOfWork.Collections.Update(collection);
             }
 
             await _unitOfWork.CompleteAsync();
