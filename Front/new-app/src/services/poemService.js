@@ -34,13 +34,16 @@ export const getPoems = async (searchParams) => {
       queryParams.append("SortBy", "CreatedAt");
     }
 
-    // Handle SortDescending param - convert to string and make sure default is true
-    let sortDescending = true;
+    // Handle SortDescending param - convert to string
     if (typeof searchParams.sortDescending === "boolean") {
-      sortDescending = searchParams.sortDescending;
+      queryParams.append(
+        "SortDescending",
+        searchParams.sortDescending.toString()
+      );
+    } else {
+      // Default to true if not specified
+      queryParams.append("SortDescending", "true");
     }
-
-    queryParams.append("SortDescending", sortDescending.toString());
 
     // Handle IsPublished param
     const isPublished = searchParams.isPublished ?? true;
@@ -48,7 +51,7 @@ export const getPoems = async (searchParams) => {
 
     console.log("API Request with params:", {
       sortBy: searchParams.sortBy,
-      sortDescending: sortDescending,
+      sortDescending: searchParams.sortDescending,
       fullUrl: `/poems?${queryParams.toString()}`,
     });
 

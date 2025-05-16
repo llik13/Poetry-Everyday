@@ -20,26 +20,23 @@ const CatalogPage = () => {
     isPublished: true,
   });
 
-  // Fetch poems on initial load and when search params change
+  // Fetch poems when searchParams or currentPage changes
   useEffect(() => {
-    fetchPoems();
-  }, [currentPage]);
+    // Create a copy of search params with the current page
+    const paramsWithPage = {
+      ...searchParams,
+      pageNumber: currentPage,
+    };
 
-  // We don't include searchParams in the dependency array because
-  // we want to control when it triggers a fetch explicitly
+    fetchPoems(paramsWithPage);
+  }, [searchParams, currentPage]);
 
-  const fetchPoems = async () => {
+  const fetchPoems = async (params) => {
     setLoading(true);
     try {
-      // Create a deep copy of the search params to avoid reference issues
-      const requestParams = {
-        ...JSON.parse(JSON.stringify(searchParams)),
-        pageNumber: currentPage,
-      };
+      console.log("Fetching poems with params:", params);
 
-      console.log("Fetching poems with params:", requestParams);
-
-      const result = await getPoems(requestParams);
+      const result = await getPoems(params);
       setPoems(result.items || []);
       setTotalPages(result.totalPages || 1);
       setLoading(false);
@@ -52,22 +49,16 @@ const CatalogPage = () => {
 
   const handleSearch = (filters) => {
     console.log("Applying new search filters:", filters);
+
     // Reset to page 1 when applying new filters
     setCurrentPage(1);
 
-    // Create new search params object
-    const newSearchParams = {
-      ...searchParams,
+    // Update search parameters - this will trigger the useEffect
+    setSearchParams((prevParams) => ({
+      ...prevParams,
       ...filters,
-      pageNumber: 1,
-    };
-
-    setSearchParams(newSearchParams);
-
-    // Explicitly trigger fetch with new parameters
-    setTimeout(() => {
-      fetchPoems();
-    }, 0);
+      pageNumber: 1, // Always reset to page 1 with new filters
+    }));
   };
 
   const handlePageChange = (page) => {

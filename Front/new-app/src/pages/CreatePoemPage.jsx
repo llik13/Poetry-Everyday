@@ -44,40 +44,42 @@ const CreatePoemPage = () => {
       setLoading(true);
       setError(null);
 
-      let savedPoem;
-
-      // Ensure the current user is set as the author
+      // Создаем объект данных для отправки на сервер
       const submissionData = {
-        ...poemData,
+        title: poemData.title,
+        content: poemData.content,
+        excerpt: poemData.excerpt,
         authorId: currentUser?.id,
         authorName: currentUser?.username,
-        // If publish is true, set isPublished to true
-        isPublished: publish,
+        tags: poemData.tags || [],
+        categories: poemData.categories || [],
+        isPublished: publish, // Важно: здесь устанавливаем статус публикации
       };
 
+      let savedPoem;
+
       if (isEditMode) {
-        // Update existing poem
+        // Обновление существующего стихотворения
         savedPoem = await updatePoem({
           ...submissionData,
           id: id,
-          // Add any additional fields needed for updating
           changeNotes: "Updated poem",
         });
       } else {
-        // Create new poem
+        // Создание нового стихотворения
         savedPoem = await createPoem(submissionData);
       }
 
       setSuccess(true);
       setLoading(false);
 
-      // Redirect after a short delay to show success message
+      // Редирект после короткой задержки для показа сообщения об успехе
       setTimeout(() => {
         if (publish) {
-          // If published, redirect to the poem's public page
+          // Если опубликовано, перенаправляем на публичную страницу стихотворения
           navigate(`/poems/${savedPoem.id}`);
         } else {
-          // If saved as draft, redirect to the drafts page
+          // Если сохранено как черновик, перенаправляем на страницу черновиков
           navigate("/cabinet/drafts");
         }
       }, 1500);

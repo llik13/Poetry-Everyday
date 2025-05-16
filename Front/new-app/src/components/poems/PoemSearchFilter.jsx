@@ -1,5 +1,3 @@
-// Updated version of PoemSearchFilter.jsx
-
 import React, { useState, useEffect } from "react";
 import "./PoemSearchFilter.css";
 
@@ -11,10 +9,10 @@ const PoemSearchFilter = ({
   const [searchTerm, setSearchTerm] = useState(initialFilters.searchTerm || "");
   const [tags, setTags] = useState(initialFilters.tags || []);
   const [categories, setCategories] = useState(initialFilters.categories || []);
-  const [sortOption, setSortOption] = useState("CreatedAt");
+  const [sortOption, setSortOption] = useState("");
   const [appliedFilters, setAppliedFilters] = useState([]);
 
-  // Define our sort options with clear mapping to API parameters
+  // Define sort options with clear mappings
   const sortOptions = [
     {
       value: "CreatedAt-desc",
@@ -48,10 +46,9 @@ const PoemSearchFilter = ({
     },
   ];
 
-  // Find the sort option that matches initialFilters
+  // Set initial sort option based on initialFilters
   useEffect(() => {
-    if (initialFilters.sortBy) {
-      const direction = initialFilters.sortDescending ? "desc" : "asc";
+    if (initialFilters.sortBy && initialFilters.sortDescending !== undefined) {
       const matchingOption = sortOptions.find(
         (option) =>
           option.apiField === initialFilters.sortBy &&
@@ -61,9 +58,12 @@ const PoemSearchFilter = ({
       if (matchingOption) {
         setSortOption(matchingOption.value);
       } else {
-        // Default to newest first if no match
+        // Default to newest first
         setSortOption("CreatedAt-desc");
       }
+    } else {
+      // Default to newest first
+      setSortOption("CreatedAt-desc");
     }
   }, [initialFilters]);
 
@@ -98,7 +98,7 @@ const PoemSearchFilter = ({
   };
 
   const triggerSearch = () => {
-    // Find the selected sort option to get api parameters
+    // Find the selected sort option to get API parameters
     const selectedOption = sortOptions.find(
       (option) => option.value === sortOption
     );
@@ -131,6 +131,9 @@ const PoemSearchFilter = ({
       default:
         break;
     }
+
+    // After removing a filter, trigger search with updated filters
+    setTimeout(triggerSearch, 0);
   };
 
   const handleSortChange = (e) => {
@@ -138,7 +141,7 @@ const PoemSearchFilter = ({
     console.log("Sort changed to:", newSortValue);
     setSortOption(newSortValue);
 
-    // We'll trigger the search after state update using setTimeout
+    // We need to wait for state to update before triggering search
     setTimeout(() => {
       const selectedOption = sortOptions.find(
         (option) => option.value === newSortValue
@@ -159,7 +162,7 @@ const PoemSearchFilter = ({
 
       console.log("Applying sort with params:", searchParams);
       onSearch(searchParams);
-    }, 0);
+    }, 10);
   };
 
   return (

@@ -196,7 +196,7 @@ namespace BusinessLogic.Services
                 Content = poemDto.Content,
                 AuthorId = poemDto.AuthorId,
                 AuthorName = poemDto.AuthorName,
-                IsPublished = false,
+                IsPublished = poemDto.IsPublished,
                 Statistics = new PoemStatistics
                 {
                     ViewCount = 0,
