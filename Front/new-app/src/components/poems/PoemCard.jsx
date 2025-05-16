@@ -3,19 +3,28 @@ import { Link } from "react-router-dom";
 import "./Poemcard.css";
 
 const PoemCard = ({ poem }) => {
-  // Truncate content to create a preview
-  const createPreview = (content, maxLength = 120) => {
-    if (!content) return "";
-    if (content.length <= maxLength) return content;
-
-    // Try to find the last complete line within the limit
-    const lastNewlineIndex = content.substring(0, maxLength).lastIndexOf("\n");
-    if (lastNewlineIndex > maxLength / 2) {
-      return content.substring(0, lastNewlineIndex) + "...";
+  // Improved preview function to display first few lines of the poem
+  const createPreview = (content, maxLines = 4, maxChars = 300) => {
+    // Check if content exists and is not empty
+    if (!content || content.trim() === "") {
+      return "No preview available...";
     }
 
-    // If no newline found, truncate by character
-    return content.substring(0, maxLength) + "...";
+    // Split content into lines
+    const lines = content.split("\n").filter((line) => line.trim() !== "");
+
+    // Take only the first few lines (up to maxLines)
+    let previewLines = lines.slice(0, maxLines);
+
+    // Join the lines back together
+    let preview = previewLines.join("\n");
+
+    // If there are more lines, add ellipsis on a new line
+    if (lines.length > maxLines) {
+      preview += "\n...";
+    }
+
+    return preview;
   };
 
   // Format date
@@ -27,12 +36,25 @@ const PoemCard = ({ poem }) => {
     });
   };
 
+  // Try to get content from either content or excerpt fields
+  const poemContent = poem.content || poem.excerpt || "";
+
+  // Debug log
+  console.log(
+    `Rendering poem card: ${poem.title}, Content length: ${poemContent.length}`
+  );
+
   return (
     <div className="card poem-card h-100">
       <div className="card-body">
         <h5 className="card-title">{poem.title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{poem.authorName}</h6>
-        <pre className="poem">{createPreview(poem.content)}</pre>
+
+        {/* Display the poem preview with proper formatting */}
+        <div className="poem-preview-container">
+          <pre className="poem-preview">{createPreview(poemContent)}</pre>
+        </div>
+
         <div className="read-more-container">
           <Link to={`/poems/${poem.id}`} className="poem-btn">
             Read more
