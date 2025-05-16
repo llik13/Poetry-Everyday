@@ -1,3 +1,5 @@
+// Updated version of PoemSearchFilter.jsx
+
 import React, { useState, useEffect } from "react";
 import "./PoemSearchFilter.css";
 
@@ -9,20 +11,61 @@ const PoemSearchFilter = ({
   const [searchTerm, setSearchTerm] = useState(initialFilters.searchTerm || "");
   const [tags, setTags] = useState(initialFilters.tags || []);
   const [categories, setCategories] = useState(initialFilters.categories || []);
-  const [sortBy, setSortBy] = useState(initialFilters.sortBy || "CreatedAt");
-  const [sortDirection, setSortDirection] = useState(
-    initialFilters.sortDescending !== false
-  );
+  const [sortOption, setSortOption] = useState("CreatedAt");
   const [appliedFilters, setAppliedFilters] = useState([]);
 
+  // Define our sort options with clear mapping to API parameters
   const sortOptions = [
-    { value: "relevance", label: "Relevance" },
-    { value: "CreatedAt", label: "Newest First" },
-    { value: "CreatedAt-asc", label: "Oldest First" },
-    { value: "ViewCount", label: "Most Popular" },
-    { value: "Title", label: "Title (A-Z)" },
-    { value: "Title-desc", label: "Title (Z-A)" },
+    {
+      value: "CreatedAt-desc",
+      label: "Newest First",
+      apiField: "CreatedAt",
+      apiDirection: true,
+    },
+    {
+      value: "CreatedAt-asc",
+      label: "Oldest First",
+      apiField: "CreatedAt",
+      apiDirection: false,
+    },
+    {
+      value: "ViewCount-desc",
+      label: "Most Popular",
+      apiField: "ViewCount",
+      apiDirection: true,
+    },
+    {
+      value: "Title-asc",
+      label: "Title (A-Z)",
+      apiField: "Title",
+      apiDirection: false,
+    },
+    {
+      value: "Title-desc",
+      label: "Title (Z-A)",
+      apiField: "Title",
+      apiDirection: true,
+    },
   ];
+
+  // Find the sort option that matches initialFilters
+  useEffect(() => {
+    if (initialFilters.sortBy) {
+      const direction = initialFilters.sortDescending ? "desc" : "asc";
+      const matchingOption = sortOptions.find(
+        (option) =>
+          option.apiField === initialFilters.sortBy &&
+          option.apiDirection === initialFilters.sortDescending
+      );
+
+      if (matchingOption) {
+        setSortOption(matchingOption.value);
+      } else {
+        // Default to newest first if no match
+        setSortOption("CreatedAt-desc");
+      }
+    }
+  }, [initialFilters]);
 
   // Update applied filters when inputs change
   useEffect(() => {
@@ -51,19 +94,29 @@ const PoemSearchFilter = ({
 
   const handleSearch = (e) => {
     e.preventDefault();
+    triggerSearch();
+  };
+
+  const triggerSearch = () => {
+    // Find the selected sort option to get api parameters
+    const selectedOption = sortOptions.find(
+      (option) => option.value === sortOption
+    );
+
+    if (!selectedOption) {
+      console.error("Invalid sort option:", sortOption);
+      return;
+    }
 
     const searchParams = {
       searchTerm,
       tags,
       categories,
-      sortBy: sortBy.split("-")[0],
-      sortDescending:
-        sortBy === "relevance"
-          ? true // Relevance is always descending
-          : sortBy.includes("-desc") ||
-            (!sortBy.includes("-asc") && sortDirection),
+      sortBy: selectedOption.apiField,
+      sortDescending: selectedOption.apiDirection,
     };
 
+    console.log("Search params:", searchParams);
     onSearch(searchParams);
   };
 
@@ -81,15 +134,32 @@ const PoemSearchFilter = ({
   };
 
   const handleSortChange = (e) => {
-    const value = e.target.value;
-    setSortBy(value);
+    const newSortValue = e.target.value;
+    console.log("Sort changed to:", newSortValue);
+    setSortOption(newSortValue);
 
-    // Update sort direction based on the selected option
-    if (value.includes("-asc")) {
-      setSortDirection(false);
-    } else if (value.includes("-desc")) {
-      setSortDirection(true);
-    }
+    // We'll trigger the search after state update using setTimeout
+    setTimeout(() => {
+      const selectedOption = sortOptions.find(
+        (option) => option.value === newSortValue
+      );
+
+      if (!selectedOption) {
+        console.error("Invalid sort option:", newSortValue);
+        return;
+      }
+
+      const searchParams = {
+        searchTerm,
+        tags,
+        categories,
+        sortBy: selectedOption.apiField,
+        sortDescending: selectedOption.apiDirection,
+      };
+
+      console.log("Applying sort with params:", searchParams);
+      onSearch(searchParams);
+    }, 0);
   };
 
   return (
@@ -136,7 +206,7 @@ const PoemSearchFilter = ({
           <span className="sort-label">Sort by:</span>
           <select
             className="sort-select"
-            value={sortBy}
+            value={sortOption}
             onChange={handleSortChange}
           >
             {sortOptions.map((option) => (

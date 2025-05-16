@@ -26,13 +26,36 @@ export const getPoems = async (searchParams) => {
 
     queryParams.append("PageNumber", searchParams.pageNumber || 1);
     queryParams.append("PageSize", searchParams.pageSize || 10);
-    queryParams.append("SortBy", searchParams.sortBy || "CreatedAt");
-    queryParams.append("SortDescending", searchParams.sortDescending || true);
-    queryParams.append("IsPublished", searchParams.isPublished ?? true);
+
+    // Handle SortBy param - default to CreatedAt if not specified
+    if (searchParams.sortBy) {
+      queryParams.append("SortBy", searchParams.sortBy);
+    } else {
+      queryParams.append("SortBy", "CreatedAt");
+    }
+
+    // Handle SortDescending param - convert to string and make sure default is true
+    let sortDescending = true;
+    if (typeof searchParams.sortDescending === "boolean") {
+      sortDescending = searchParams.sortDescending;
+    }
+
+    queryParams.append("SortDescending", sortDescending.toString());
+
+    // Handle IsPublished param
+    const isPublished = searchParams.isPublished ?? true;
+    queryParams.append("IsPublished", isPublished.toString());
+
+    console.log("API Request with params:", {
+      sortBy: searchParams.sortBy,
+      sortDescending: sortDescending,
+      fullUrl: `/poems?${queryParams.toString()}`,
+    });
 
     const response = await api.get(`/poems?${queryParams.toString()}`);
     return response.data;
   } catch (error) {
+    console.error("Error fetching poems:", error);
     throw error;
   }
 };

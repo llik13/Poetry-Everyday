@@ -23,17 +23,25 @@ const CatalogPage = () => {
   // Fetch poems on initial load and when search params change
   useEffect(() => {
     fetchPoems();
-  }, [currentPage, searchParams]);
+  }, [currentPage]);
+
+  // We don't include searchParams in the dependency array because
+  // we want to control when it triggers a fetch explicitly
 
   const fetchPoems = async () => {
     setLoading(true);
     try {
-      const result = await getPoems({
-        ...searchParams,
+      // Create a deep copy of the search params to avoid reference issues
+      const requestParams = {
+        ...JSON.parse(JSON.stringify(searchParams)),
         pageNumber: currentPage,
-      });
-      setPoems(result.items);
-      setTotalPages(result.totalPages);
+      };
+
+      console.log("Fetching poems with params:", requestParams);
+
+      const result = await getPoems(requestParams);
+      setPoems(result.items || []);
+      setTotalPages(result.totalPages || 1);
       setLoading(false);
     } catch (err) {
       console.error("Error fetching poems:", err);
@@ -43,13 +51,23 @@ const CatalogPage = () => {
   };
 
   const handleSearch = (filters) => {
+    console.log("Applying new search filters:", filters);
     // Reset to page 1 when applying new filters
     setCurrentPage(1);
-    setSearchParams({
+
+    // Create new search params object
+    const newSearchParams = {
       ...searchParams,
       ...filters,
       pageNumber: 1,
-    });
+    };
+
+    setSearchParams(newSearchParams);
+
+    // Explicitly trigger fetch with new parameters
+    setTimeout(() => {
+      fetchPoems();
+    }, 0);
   };
 
   const handlePageChange = (page) => {
