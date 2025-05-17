@@ -9,7 +9,9 @@ import UserCabinetPage from "./pages/UserCabinetPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreatePoemPage from "./pages/CreatePoemPage";
-import EmailVerificationPage from "./pages/EmailVerificationPage"; // Import the new page
+import EmailVerificationPage from "./pages/EmailVerificationPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 // Auth protected route component
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -25,6 +27,8 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<EmailVerificationPage />} />{" "}
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       {/* New route for email verification */}
       {/* Protected Routes */}
       <Route

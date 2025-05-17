@@ -19,6 +19,20 @@ export const AuthProvider = ({ children }) => {
   // Initialize authentication state
   useEffect(() => {
     const initAuth = async () => {
+      // Skip authentication check if on password reset or verification pages
+      if (
+        window.location.pathname === "/reset-password" ||
+        window.location.pathname === "/verify-email" ||
+        window.location.pathname === "/forgot-password"
+      ) {
+        console.log(
+          "Skipping auth check for auth-related page:",
+          window.location.pathname
+        );
+        setLoading(false);
+        return;
+      }
+
       const storedToken = localStorage.getItem("token");
 
       if (storedToken) {
@@ -153,7 +167,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
 
-      // Логирование для отладки
+      // Log for debugging
       console.log("Registering user with data:", userData);
 
       const response = await registerUser(userData);
@@ -162,33 +176,33 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true, message: response.message };
     } catch (err) {
-      // Расширенная обработка ошибок
+      // Extended error handling
       console.error("Registration error:", err);
 
       let errorMessage = "Registration failed. Please try again.";
       let errors = [];
 
-      // Проверяем наличие данных в ответе
+      // Check for response data
       if (err.response?.data) {
         const responseData = err.response.data;
 
-        // Проверяем различные форматы ошибок, которые может вернуть сервер
+        // Check different error formats the server might return
         if (responseData.errors && Array.isArray(responseData.errors)) {
-          // Формат ошибок Identity с массивом ошибок
+          // Identity errors format with array of errors
           errors = responseData.errors;
           errorMessage = responseData.errors.join(". ");
         } else if (
           responseData.errors &&
           typeof responseData.errors === "object"
         ) {
-          // Формат ошибок валидации ASP.NET Core
+          // ASP.NET Core validation errors format
           errors = Object.values(responseData.errors).flat();
           errorMessage = errors.join(". ");
         } else if (responseData.message) {
-          // Формат с одним сообщением об ошибке
+          // Single error message format
           errorMessage = responseData.message;
         } else if (typeof responseData === "string") {
-          // Текстовый формат ошибки
+          // Text error format
           errorMessage = responseData;
         }
       }

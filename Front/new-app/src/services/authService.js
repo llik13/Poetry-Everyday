@@ -81,9 +81,24 @@ export const forgotPassword = async (email) => {
 // Reset password
 export const resetPassword = async (resetData) => {
   try {
-    const response = await api.post("/identity/reset-password", resetData);
+    console.log("Sending reset password request with:", {
+      email: resetData.email,
+      tokenPresent: !!resetData.token,
+      passwordLength: resetData.newPassword.length,
+    });
+
+    // Build the request data as expected by your API
+    const requestData = {
+      email: resetData.email,
+      token: resetData.token,
+      newPassword: resetData.newPassword,
+      confirmNewPassword: resetData.confirmNewPassword,
+    };
+
+    const response = await api.post("/identity/reset-password", requestData);
     return response.data;
   } catch (error) {
+    console.error("Reset password error:", error);
     throw error;
   }
 };
