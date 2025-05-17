@@ -1,5 +1,6 @@
 ﻿using BLL.User.DTOs;
 using BLL.User.Interfaces;
+using BLL.User.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,14 @@ namespace API.User.Controllers
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileService _profileService;
+        private readonly IProfileImageService _profileImageService;
 
-        public UserProfileController(IUserProfileService profileService)
+        public UserProfileController(
+            IUserProfileService profileService,
+            IProfileImageService profileImageService)
         {
             _profileService = profileService;
+            _profileImageService = profileImageService;
         }
 
         [HttpGet]
@@ -64,9 +69,25 @@ namespace API.User.Controllers
 
             using (var stream = image.OpenReadStream())
             {
-                var imageUrl = await _profileService.UploadProfileImageAsync(userId, stream);
+                var imageUrl = await _profileImageService.SaveProfileImageAsync(userId, stream);
                 return Ok(new { imageUrl });
             }
+        }
+
+        // Добавляем новый метод для получения изображения
+        [HttpGet("image/{userId}")]
+        [AllowAnonymous] // Разрешаем анонимный доступ к изображениям профиля
+        public async Task<IActionResult> GetProfileImage(string userId)
+        {
+            var (imageData, contentType) = await _profileImageService.GetProfileImageAsync(userId);
+
+            if (imageData == null || contentType == null)
+            {
+                // Возвращаем стандартное изображение или 404
+                return NotFound();
+            }
+
+            return File(imageData, contentType);
         }
 
         [HttpGet("activity")]
@@ -88,6 +109,7 @@ namespace API.User.Controllers
                 ? Ok(new { message = "Notification settings updated" })
                 : BadRequest(new { message = "Failed to update notification settings" });
         }
+
     }
 
 }

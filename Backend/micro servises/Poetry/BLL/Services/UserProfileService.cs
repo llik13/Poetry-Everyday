@@ -128,21 +128,21 @@ namespace BLL.User.Services
             if (user == null)
                 return null;
 
-            // Delete old image if exists
+            // Удаляем старое изображение, если оно существует
             if (!string.IsNullOrEmpty(user.ProfileImageUrl))
             {
                 await _fileStorageService.DeleteFileAsync(user.ProfileImageUrl);
             }
 
-            // Save new image
-            string fileName = $"profile-images/{userId}/{System.Guid.NewGuid()}.jpg";
+            // Сохраняем новое изображение
+            string fileName = $"profile-images/{userId}/{Guid.NewGuid()}.jpg";
             var imageUrl = await _fileStorageService.SaveFileAsync(fileName, imageStream);
 
-            // Update user
+            // Обновляем пользователя
             user.ProfileImageUrl = imageUrl;
             await _userManager.UpdateAsync(user);
 
-            // Log activity
+            // Логируем активность
             await _activityRepository.AddActivityAsync(new UserActivity
             {
                 UserId = userId,
@@ -152,6 +152,7 @@ namespace BLL.User.Services
 
             return imageUrl;
         }
+
 
         public async Task<List<ActivityDto>> GetUserActivityAsync(string userId, int page = 1, int pageSize = 10)
         {
@@ -199,5 +200,6 @@ namespace BLL.User.Services
 
             return result.Succeeded;
         }
+
     }
 }

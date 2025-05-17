@@ -144,6 +144,19 @@
       "SwaggerKey": "Registration"
     },
     {
+      "UpstreamPathTemplate": "/gateway/profile/image/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/profile/image/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/profile/activity",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/profile/activity",

@@ -14,7 +14,8 @@ namespace DAL.User.Context
         public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options) { }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<UserActivity> UserActivities { get; set; }
+        public DbSet<UserActivity> UserActivities { get; set; } 
+        public DbSet<ProfileImage> ProfileImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +33,11 @@ namespace DAL.User.Context
             // Configure NotificationPreferences as an owned entity
             modelBuilder.Entity<ApplicationUser>()
                 .OwnsOne(u => u.NotificationPreferences);
+
+            modelBuilder.Entity<ProfileImage>()
+                .HasOne(p => p.User)
+                .WithOne()
+                .HasForeignKey<ProfileImage>(p => p.UserId);
         }
     }
 

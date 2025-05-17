@@ -10,6 +10,7 @@ namespace BLL.User.Interfaces
     {
         Task<string> SaveFileAsync(string fileName, Stream fileStream);
         Task<bool> DeleteFileAsync(string fileUrl);
+        Task<(byte[] ImageData, string ContentType)> GetImageAsync(string userId);
     }
 
 }
