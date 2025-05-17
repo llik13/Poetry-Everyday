@@ -19,10 +19,9 @@ export const registerUser = async (userData) => {
 
     // Проверим, что все поля соответствуют ожидаемому формату
     const registrationData = {
-      userName: userData.userName,
-      email: userData.email,
-      password: userData.password,
-      confirmPassword: userData.confirmPassword,
+      UserName: userData.userName,
+      Email: userData.email,
+      Password: userData.password,
     };
 
     console.log("Formatted registration data:", registrationData);
