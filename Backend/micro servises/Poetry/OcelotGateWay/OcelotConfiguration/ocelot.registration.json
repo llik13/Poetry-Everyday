@@ -53,6 +53,19 @@
       "SwaggerKey": "Registration"
     },
     {
+      "UpstreamPathTemplate": "/gateway/identity/resend-verification",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/identity/resend-verification",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "Registration"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/identity/forgot-password",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamPathTemplate": "/api/identity/forgot-password",

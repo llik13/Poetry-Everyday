@@ -8,7 +8,8 @@ import PoemDetailPage from "./pages/PoemDetailPage";
 import UserCabinetPage from "./pages/UserCabinetPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import CreatePoemPage from "./pages/CreatePoemPage"; // Import the new page
+import CreatePoemPage from "./pages/CreatePoemPage";
+import EmailVerificationPage from "./pages/EmailVerificationPage"; // Import the new page
 
 // Auth protected route component
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -23,7 +24,8 @@ const AppRoutes = () => {
       <Route path="/poems/:id" element={<PoemDetailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-
+      <Route path="/verify-email" element={<EmailVerificationPage />} />{" "}
+      {/* New route for email verification */}
       {/* Protected Routes */}
       <Route
         path="/cabinet/*"
@@ -33,7 +35,6 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-
       {/* Create/Edit Poem Routes - Protected */}
       <Route
         path="/cabinet/create-poem"
@@ -51,7 +52,6 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-
       {/* 404 - Not Found */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

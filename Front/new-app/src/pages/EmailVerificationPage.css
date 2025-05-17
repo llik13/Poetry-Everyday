@@ -1,0 +1,93 @@
+.email-verification-container {
+  max-width: 600px;
+  margin: 5rem auto;
+  padding: var(--spacing-md);
+}
+
+.verification-card {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.verification-card.success {
+  border-left: 5px solid var(--color-success);
+}
+
+.verification-card.error {
+  border-left: 5px solid var(--color-danger);
+}
+
+.verification-icon {
+  font-size: 7rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.verification-icon.verifying {
+  color: var(--color-primary);
+}
+
+.verification-icon.success {
+  color: var(--color-success);
+}
+
+.verification-icon.error {
+  color: var(--color-danger);
+}
+
+.verification-card h2 {
+  font-size: 2.8rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+
+.verification-card p {
+  font-size: 1.6rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+}
+
+.verification-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.verification-actions button {
+  min-width: 20rem;
+}
+
+.resend-link {
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.resend-link:hover {
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+  .email-verification-container {
+    margin: 3rem auto;
+    padding: var(--spacing-sm);
+  }
+
+  .verification-card {
+    padding: var(--spacing-lg);
+  }
+
+  .verification-icon {
+    font-size: 5rem;
+  }
+
+  .verification-card h2 {
+    font-size: 2.4rem;
+  }
+}

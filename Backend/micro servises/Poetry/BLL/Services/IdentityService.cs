@@ -189,6 +189,42 @@ namespace BLL.User.Services
 
             return await _tokenService.RevokeRefreshTokenAsync(refreshToken);
         }
-    }
 
+        public async Task<bool> ResendVerificationEmailAsync(string email)
+        {
+            // Find the user by email
+            var user = await _userManager.FindByEmailAsync(email);
+
+            // If user not found or email already confirmed, return success (for security reasons)
+            if (user == null)
+                return true;
+
+            if (user.EmailConfirmed)
+                return true;
+
+            try
+            {
+                // Generate new verification token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                // Send verification email
+                await _emailService.SendVerificationEmailAsync(user.Email, token, user.Id);
+
+                // Log activity
+                await _activityRepository.AddActivityAsync(new UserActivity
+                {
+                    UserId = user.Id,
+                    Type = ActivityType.UpdateProfile,
+                    Description = "Email verification resent"
+                });
+
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log error internally, but return true to avoid revealing user existence
+                return false;
+            }
+        }
+    }
 }

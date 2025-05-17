@@ -140,6 +140,29 @@
   color: var(--color-text-muted);
 }
 
+/* Verification help section */
+.verification-help {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(220, 53, 69, 0.2);
+  font-size: 1.3rem;
+}
+
+.verification-help p {
+  margin-bottom: 0.5rem;
+}
+
+.resend-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.resend-link:hover {
+  color: var(--color-primary-dark);
+}
+
 @media (max-width: 768px) {
   .auth-form-container {
     padding: 2rem;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import AuthContext from "../../context/AuthContext";
@@ -9,7 +9,14 @@ import "./AuthForms.css";
 const LoginForm = () => {
   const { login } = useContext(AuthContext);
   const [serverError, setServerError] = useState("");
+  const [emailNotVerified, setEmailNotVerified] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we have a verification success message from query params
+  const urlParams = new URLSearchParams(location.search);
+  const verificationMessage = urlParams.get("verified");
+  const emailVerified = verificationMessage === "true";
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -30,6 +37,7 @@ const LoginForm = () => {
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting }) => {
     setServerError("");
+    setEmailNotVerified(false);
 
     try {
       const success = await login(values);
@@ -39,9 +47,29 @@ const LoginForm = () => {
         setServerError("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      setServerError(
-        error.message || "An error occurred during login. Please try again."
-      );
+      if (error.response && error.response.status === 401) {
+        const responseData = error.response.data;
+
+        // Check if email is not verified
+        if (
+          responseData &&
+          responseData.message &&
+          responseData.message.includes("verify your email")
+        ) {
+          setEmailNotVerified(true);
+          setServerError(
+            "Your email is not verified. Please check your inbox for the verification link."
+          );
+        } else {
+          setServerError(
+            error.message || "An error occurred during login. Please try again."
+          );
+        }
+      } else {
+        setServerError(
+          error.message || "An error occurred during login. Please try again."
+        );
+      }
     } finally {
       setSubmitting(false);
     }
@@ -51,7 +79,25 @@ const LoginForm = () => {
     <div className="auth-form-container">
       <h2 className="auth-title">Sign In</h2>
 
-      {serverError && <div className="auth-error-message">{serverError}</div>}
+      {emailVerified && (
+        <div className="auth-success-message">
+          Your email has been verified successfully! You can now log in.
+        </div>
+      )}
+
+      {serverError && (
+        <div className="auth-error-message">
+          {serverError}
+          {emailNotVerified && (
+            <div className="verification-help">
+              <p>Didn't receive the verification email?</p>
+              <Link to="/resend-verification" className="resend-link">
+                Resend verification email
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
 
       <Formik
         initialValues={initialValues}

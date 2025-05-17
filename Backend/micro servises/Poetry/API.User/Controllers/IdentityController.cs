@@ -1,7 +1,5 @@
 ﻿using BLL.User.DTOs;
 using BLL.User.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.User.Controllers
@@ -11,18 +9,59 @@ namespace API.User.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+        private readonly IConfiguration _configuration;
 
-        public IdentityController(IIdentityService identityService)
+        public IdentityController(IIdentityService identityService, IConfiguration configuration)
         {
             _identityService = identityService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
         {
+            _logger.LogInformation("Registration attempt: Username={Username}, Email={Email}",
+                registerDto.UserName, registerDto.Email);
+
+            if (registerDto == null)
+            {
+                _logger.LogWarning("Registration failed: RegisterDto is null");
+                return BadRequest(new { message = "Registration data is missing" });
+            }
+
+            if (string.IsNullOrEmpty(registerDto.UserName))
+            {
+                _logger.LogWarning("Registration failed: Username is missing");
+                return BadRequest(new { message = "Username is required" });
+            }
+
+            if (string.IsNullOrEmpty(registerDto.Email))
+            {
+                _logger.LogWarning("Registration failed: Email is missing");
+                return BadRequest(new { message = "Email is required" });
+            }
+
+            if (string.IsNullOrEmpty(registerDto.Password))
+            {
+                _logger.LogWarning("Registration failed: Password is missing");
+                return BadRequest(new { message = "Password is required" });
+            }
+
             var result = await _identityService.RegisterUserAsync(registerDto);
+
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+            {
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogWarning("Registration error: {ErrorCode} - {ErrorDescription}",
+                        error.Code, error.Description);
+                }
+
+                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+            }
+
+            _logger.LogInformation("Registration successful for {Username}, {Email}",
+                registerDto.UserName, registerDto.Email);
 
             return Ok(new { message = "Registration successful. Please verify your email." });
         }
@@ -73,9 +112,20 @@ namespace API.User.Controllers
         public async Task<IActionResult> VerifyEmail([FromQuery] string userId, string token)
         {
             var result = await _identityService.VerifyEmailAsync(userId, token);
-            return result
-                ? Ok(new { message = "Email verified successfully" })
-                : BadRequest(new { message = "Invalid verification token" });
+
+            // Get the frontend URL from configuration
+            var frontendUrl = _configuration["FrontendUrl"] ?? "https://localhost:3000";
+
+            if (result)
+            {
+                // Redirect to the login page with a success parameter
+                return Redirect($"{frontendUrl}/login?verified=true");
+            }
+            else
+            {
+                // Redirect to the login page with an error parameter
+                return Redirect($"{frontendUrl}/login?verified=false");
+            }
         }
 
         [HttpPost("forgot-password")]
@@ -95,7 +145,20 @@ namespace API.User.Controllers
             return Ok(new { message = "Password reset successful." });
         }
 
-        
+        [HttpPost("resend-verification")]
+        public async Task<IActionResult> ResendVerification([FromBody] ForgotPasswordDto emailDto)
+        {
+            if (string.IsNullOrEmpty(emailDto.Email))
+            {
+                return BadRequest(new { message = "Email is required" });
+            }
+
+            await _identityService.ResendVerificationEmailAsync(emailDto.Email);
+
+            // Always return success to prevent email enumeration attacks
+            return Ok(new { message = "If your email exists in our system, you will receive a verification email." });
+        }
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -123,5 +186,4 @@ namespace API.User.Controllers
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
     }
-
 }

@@ -17,6 +17,7 @@ namespace BLL.User.Interfaces
         Task<bool> ForgotPasswordAsync(string email);
         Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
         Task<bool> LogoutAsync(string refreshToken);
+        Task<bool> ResendVerificationEmailAsync(string email);
     }
 
 }

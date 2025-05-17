@@ -1,0 +1,128 @@
+.resend-verification-container {
+  max-width: 600px;
+  margin: 5rem auto;
+  padding: var(--spacing-md);
+}
+
+.resend-verification-card {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.resend-verification-card h2 {
+  font-size: 2.8rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.description {
+  font-size: 1.6rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.error-message {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-danger);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.5rem;
+}
+
+.success-container {
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.success-icon {
+  font-size: 6rem;
+  color: var(--color-success);
+  margin-bottom: var(--spacing-md);
+}
+
+.success-container h3 {
+  font-size: 2.2rem;
+  color: var(--color-success);
+  margin-bottom: var(--spacing-md);
+}
+
+.success-container p {
+  font-size: 1.6rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+}
+
+.resend-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: 1.6rem;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  font-size: 1.6rem;
+  border: 1px solid var(--color-bg-dark);
+  border-radius: var(--border-radius-sm);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: 1.4rem;
+  margin-top: var(--spacing-xs);
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+
+.action-links {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+.back-link {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.back-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .resend-verification-container {
+    margin: 3rem auto;
+    padding: var(--spacing-sm);
+  }
+
+  .resend-verification-card {
+    padding: var(--spacing-lg);
+  }
+
+  .resend-verification-card h2 {
+    font-size: 2.4rem;
+  }
+}

@@ -10,6 +10,7 @@ const RegisterForm = () => {
   const { register } = useContext(AuthContext);
   const [serverError, setServerError] = useState("");
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
   const navigate = useNavigate();
 
   // Validation schema
@@ -46,12 +47,11 @@ const RegisterForm = () => {
       const result = await register(values);
 
       if (result.success) {
+        setRegisteredEmail(values.email);
         setRegistrationSuccess(true);
         resetForm();
-        // Optionally redirect to login page after a delay
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+
+        // We won't automatically redirect to login since email verification is required
       } else {
         setServerError(
           result.message || "Registration failed. Please try again."
@@ -75,8 +75,15 @@ const RegisterForm = () => {
 
       {registrationSuccess && (
         <div className="auth-success-message">
-          Registration successful! Please check your email to verify your
-          account. You will be redirected to the login page shortly.
+          <p>
+            Registration successful! Please check your email to verify your
+            account.
+          </p>
+          <p>
+            We've sent a verification link to <strong>{registeredEmail}</strong>
+            .
+          </p>
+          <p>You'll need to verify your email before you can log in.</p>
         </div>
       )}
 

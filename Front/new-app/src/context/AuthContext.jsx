@@ -152,16 +152,53 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
+
+      // Логирование для отладки
+      console.log("Registering user with data:", userData);
+
       const response = await registerUser(userData);
+
+      console.log("Registration response:", response);
+
       return { success: true, message: response.message };
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.message || "Registration failed. Please try again.";
-      setError(errorMessage);
+      // Расширенная обработка ошибок
       console.error("Registration error:", err);
+
+      let errorMessage = "Registration failed. Please try again.";
+      let errors = [];
+
+      // Проверяем наличие данных в ответе
+      if (err.response?.data) {
+        const responseData = err.response.data;
+
+        // Проверяем различные форматы ошибок, которые может вернуть сервер
+        if (responseData.errors && Array.isArray(responseData.errors)) {
+          // Формат ошибок Identity с массивом ошибок
+          errors = responseData.errors;
+          errorMessage = responseData.errors.join(". ");
+        } else if (
+          responseData.errors &&
+          typeof responseData.errors === "object"
+        ) {
+          // Формат ошибок валидации ASP.NET Core
+          errors = Object.values(responseData.errors).flat();
+          errorMessage = errors.join(". ");
+        } else if (responseData.message) {
+          // Формат с одним сообщением об ошибке
+          errorMessage = responseData.message;
+        } else if (typeof responseData === "string") {
+          // Текстовый формат ошибки
+          errorMessage = responseData;
+        }
+      }
+
+      setError(errorMessage);
+
       return {
         success: false,
         message: errorMessage,
+        errors: errors,
       };
     }
   };
