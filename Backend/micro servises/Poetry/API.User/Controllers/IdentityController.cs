@@ -20,48 +20,9 @@ namespace API.User.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
         {
-            _logger.LogInformation("Registration attempt: Username={Username}, Email={Email}",
-                registerDto.UserName, registerDto.Email);
-
-            if (registerDto == null)
-            {
-                _logger.LogWarning("Registration failed: RegisterDto is null");
-                return BadRequest(new { message = "Registration data is missing" });
-            }
-
-            if (string.IsNullOrEmpty(registerDto.UserName))
-            {
-                _logger.LogWarning("Registration failed: Username is missing");
-                return BadRequest(new { message = "Username is required" });
-            }
-
-            if (string.IsNullOrEmpty(registerDto.Email))
-            {
-                _logger.LogWarning("Registration failed: Email is missing");
-                return BadRequest(new { message = "Email is required" });
-            }
-
-            if (string.IsNullOrEmpty(registerDto.Password))
-            {
-                _logger.LogWarning("Registration failed: Password is missing");
-                return BadRequest(new { message = "Password is required" });
-            }
-
             var result = await _identityService.RegisterUserAsync(registerDto);
-
             if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                {
-                    _logger.LogWarning("Registration error: {ErrorCode} - {ErrorDescription}",
-                        error.Code, error.Description);
-                }
-
-                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-            }
-
-            _logger.LogInformation("Registration successful for {Username}, {Email}",
-                registerDto.UserName, registerDto.Email);
+                return BadRequest(result.Errors);
 
             return Ok(new { message = "Registration successful. Please verify your email." });
         }
