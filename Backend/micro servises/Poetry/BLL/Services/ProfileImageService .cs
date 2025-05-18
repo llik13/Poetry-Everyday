@@ -55,7 +55,7 @@ namespace BLL.User.Services
             }
 
             // Обновляем URL изображения в профиле пользователя
-            string imageUrl = $"/api/profile/image/{userId}";
+            string imageUrl = $"/gateway/profile/image/{userId}";
             user.ProfileImageUrl = imageUrl;
             await _userManager.UpdateAsync(user);
 

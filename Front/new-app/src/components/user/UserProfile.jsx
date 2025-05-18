@@ -1,6 +1,4 @@
 import React from "react";
-// Удалите эту строку, так как ничего из react-router-dom не используется
-// import { Something, Link, SomethingElse } from "react-router-dom";
 import Button from "../common/Button";
 import "./UserProfile.css";
 
@@ -18,11 +16,27 @@ const UserProfile = ({ profile }) => {
     return "/assets/images/default-profile.jpg"; // Default profile image path
   };
 
+  const getProfileImageUrl = (url) => {
+    if (!url) return getDefaultProfileImage();
+
+    // Проверяем, начинается ли путь с "http"
+    if (url.startsWith("http")) {
+      return url;
+    }
+
+    // Если путь относительный, убедимся, что он начинается с "/"
+    const path = url.startsWith("/") ? url : `/${url}`;
+
+    // Для относительного пути - не добавляем базовый URL, браузер
+    // добавит текущий домен автоматически
+    return path;
+  };
+
   return (
     <div className="user-profile">
       <div className="profile-picture">
         <img
-          src={profile.profileImageUrl || getDefaultProfileImage()}
+          src={getProfileImageUrl(profile.profileImageUrl)}
           alt={`${profile.userName}'s profile`}
         />
       </div>

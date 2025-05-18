@@ -15,13 +15,16 @@ namespace API.User.Controllers
     {
         private readonly IUserProfileService _profileService;
         private readonly IProfileImageService _profileImageService;
+        private readonly ILogger<UserProfileController> _logger;
 
         public UserProfileController(
             IUserProfileService profileService,
-            IProfileImageService profileImageService)
+            IProfileImageService profileImageService,
+            ILogger<UserProfileController> logger)
         {
             _profileService = profileService;
             _profileImageService = profileImageService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -74,20 +77,33 @@ namespace API.User.Controllers
             }
         }
 
-        // Добавляем новый метод для получения изображения
         [HttpGet("image/{userId}")]
-        [AllowAnonymous] // Разрешаем анонимный доступ к изображениям профиля
+        [AllowAnonymous]
         public async Task<IActionResult> GetProfileImage(string userId)
         {
-            var (imageData, contentType) = await _profileImageService.GetProfileImageAsync(userId);
-
-            if (imageData == null || contentType == null)
+            try
             {
-                // Возвращаем стандартное изображение или 404
-                return NotFound();
-            }
+                var (imageData, contentType) = await _profileImageService.GetProfileImageAsync(userId);
 
-            return File(imageData, contentType);
+                if (imageData == null || contentType == null)
+                {
+                    // Логирование для диагностики
+                    _logger.LogWarning($"Image not found for user {userId}");
+
+                    // Возвращаем стандартное изображение или 404
+                    return NotFound();
+                }
+
+                // Логирование для диагностики
+                _logger.LogInformation($"Returning image for user {userId}, content type: {contentType}, size: {imageData.Length} bytes");
+
+                return File(imageData, contentType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error retrieving image for user {userId}");
+                return StatusCode(500, "Internal server error retrieving image");
+            }
         }
 
         [HttpGet("activity")]
