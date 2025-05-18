@@ -13,7 +13,6 @@ namespace BLL.User.Interfaces
         Task<UserProfileDto> GetUserProfileAsync(string userId);
         Task<bool> UpdateUserProfileAsync(string userId, UpdateProfileDto updateProfileDto);
         Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto);
-        Task<string> UploadProfileImageAsync(string userId, Stream imageStream);
         Task<List<ActivityDto>> GetUserActivityAsync(string userId, int page = 1, int pageSize = 10);
         Task<bool> UpdateNotificationSettingsAsync(string userId, NotificationSettingsDto settingsDto);
     }

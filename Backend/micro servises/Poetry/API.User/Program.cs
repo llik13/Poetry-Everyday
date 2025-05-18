@@ -128,11 +128,9 @@ namespace API.User
 
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
-            builder.Services.AddScoped<IProfileImageRepository, ProfileImageRepository>();
+            
 
             builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
-            builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
-            builder.Services.AddScoped<IFileStorageService, FileStorageService>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ITokenService, TokenService>();

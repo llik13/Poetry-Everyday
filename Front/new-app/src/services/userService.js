@@ -46,24 +46,6 @@ export const changePassword = async (passwordData) => {
   }
 };
 
-// Upload profile image
-export const uploadProfileImage = async (imageFile) => {
-  try {
-    const formData = new FormData();
-    formData.append("image", imageFile);
-
-    const response = await api.post("/profile/upload-image", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    handleApiError(error, "uploading profile image");
-  }
-};
-
 // Get user activity
 export const getUserActivity = async (page = 1, pageSize = 10) => {
   try {
@@ -146,7 +128,6 @@ export default {
   getUserProfile,
   updateUserProfile,
   changePassword,
-  uploadProfileImage,
   getUserActivity,
   updateNotificationSettings,
   getUserNotifications,

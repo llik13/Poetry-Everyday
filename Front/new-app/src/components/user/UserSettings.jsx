@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   updateUserProfile,
   changePassword,
-  uploadProfileImage,
   updateNotificationSettings,
 } from "../../services/userService";
 import Button from "../common/Button";
@@ -32,10 +31,6 @@ const UserSettings = ({ profile }) => {
     newsletter: profile.notificationSettings?.newsletter ?? true,
   });
 
-  // File upload state
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(profile.profileImageUrl || "");
-
   // Form status states
   const [profileUpdateSuccess, setProfileUpdateSuccess] = useState(false);
   const [profileUpdateError, setProfileUpdateError] = useState(null);
@@ -44,8 +39,6 @@ const UserSettings = ({ profile }) => {
   const [notificationUpdateSuccess, setNotificationUpdateSuccess] =
     useState(false);
   const [notificationUpdateError, setNotificationUpdateError] = useState(null);
-  const [imageUploadSuccess, setImageUploadSuccess] = useState(false);
-  const [imageUploadError, setImageUploadError] = useState(null);
 
   // Handle profile form changes
   const handleProfileInputChange = (e) => {
@@ -72,21 +65,6 @@ const UserSettings = ({ profile }) => {
       ...notificationSettings,
       [name]: checked,
     });
-  };
-
-  // Handle image selection
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedImage(file);
-
-      // Create a preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   // Submit profile update
@@ -153,26 +131,6 @@ const UserSettings = ({ profile }) => {
     }
   };
 
-  // Submit image upload
-  const handleImageSubmit = async (e) => {
-    e.preventDefault();
-    setImageUploadSuccess(false);
-    setImageUploadError(null);
-
-    if (!selectedImage) {
-      setImageUploadError("Please select an image to upload.");
-      return;
-    }
-
-    try {
-      await uploadProfileImage(selectedImage);
-      setImageUploadSuccess(true);
-    } catch (err) {
-      console.error("Error uploading image:", err);
-      setImageUploadError("Failed to upload image. Please try again.");
-    }
-  };
-
   return (
     <div className="user-settings">
       <div className="settings-header">
@@ -220,46 +178,6 @@ const UserSettings = ({ profile }) => {
               Save Changes
             </Button>
           </form>
-        </div>
-
-        {/* Profile Image */}
-        <div className="settings-card">
-          <h3 className="settings-card-title">Profile Picture</h3>
-          {imageUploadSuccess && (
-            <div className="alert alert-success">
-              Profile image updated successfully!
-            </div>
-          )}
-          {imageUploadError && (
-            <div className="alert alert-danger">{imageUploadError}</div>
-          )}
-          <div className="profile-image-container">
-            <div className="profile-image-preview">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Profile preview" />
-              ) : (
-                <div className="no-image">No image selected</div>
-              )}
-            </div>
-            <form onSubmit={handleImageSubmit}>
-              <div className="form-group">
-                <input
-                  type="file"
-                  id="profileImage"
-                  name="profileImage"
-                  className="form-control-file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-                <small className="form-text text-muted">
-                  Maximum file size: 2MB. Supported formats: JPG, PNG, GIF.
-                </small>
-              </div>
-              <Button type="submit" variant="primary" disabled={!selectedImage}>
-                Upload Image
-              </Button>
-            </form>
-          </div>
         </div>
 
         {/* Password Settings */}

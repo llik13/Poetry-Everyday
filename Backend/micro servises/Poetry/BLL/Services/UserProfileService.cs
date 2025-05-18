@@ -13,18 +13,15 @@ namespace BLL.User.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserActivityRepository _activityRepository;
-        private readonly IFileStorageService _fileStorageService;
         private readonly IPublishEndpoint _publishEndpoint;
 
         public UserProfileService(
             UserManager<ApplicationUser> userManager,
             IUserActivityRepository activityRepository,
-            IFileStorageService fileStorageService,
             IPublishEndpoint publishEndpoint)
         {
             _userManager = userManager;
             _activityRepository = activityRepository;
-            _fileStorageService = fileStorageService;
             _publishEndpoint = publishEndpoint;
         }
 
@@ -121,37 +118,6 @@ namespace BLL.User.Services
             );
         }
 
-        public async Task<string> UploadProfileImageAsync(string userId, Stream imageStream)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                return null;
-
-            // Удаляем старое изображение, если оно существует
-            if (!string.IsNullOrEmpty(user.ProfileImageUrl))
-            {
-                await _fileStorageService.DeleteFileAsync(user.ProfileImageUrl);
-            }
-
-            // Сохраняем новое изображение
-            string fileName = $"profile-images/{userId}/{Guid.NewGuid()}.jpg";
-            var imageUrl = await _fileStorageService.SaveFileAsync(fileName, imageStream);
-
-            // Обновляем пользователя
-            user.ProfileImageUrl = imageUrl;
-            await _userManager.UpdateAsync(user);
-
-            // Логируем активность
-            await _activityRepository.AddActivityAsync(new UserActivity
-            {
-                UserId = userId,
-                Type = ActivityType.UpdateProfile,
-                Description = "User updated their profile picture"
-            });
-
-            return imageUrl;
-        }
 
 
         public async Task<List<ActivityDto>> GetUserActivityAsync(string userId, int page = 1, int pageSize = 10)

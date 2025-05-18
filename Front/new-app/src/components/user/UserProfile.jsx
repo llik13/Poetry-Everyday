@@ -12,35 +12,8 @@ const UserProfile = ({ profile }) => {
     });
   };
 
-  const getDefaultProfileImage = () => {
-    return "/assets/images/default-profile.jpg"; // Default profile image path
-  };
-
-  const getProfileImageUrl = (url) => {
-    if (!url) return getDefaultProfileImage();
-
-    // Проверяем, начинается ли путь с "http"
-    if (url.startsWith("http")) {
-      return url;
-    }
-
-    // Если путь относительный, убедимся, что он начинается с "/"
-    const path = url.startsWith("/") ? url : `/${url}`;
-
-    // Для относительного пути - не добавляем базовый URL, браузер
-    // добавит текущий домен автоматически
-    return path;
-  };
-
   return (
     <div className="user-profile">
-      <div className="profile-picture">
-        <img
-          src={getProfileImageUrl(profile.profileImageUrl)}
-          alt={`${profile.userName}'s profile`}
-        />
-      </div>
-
       <div className="profile-info">
         <h1 className="user-name">{profile.userName}</h1>
 
@@ -54,22 +27,6 @@ const UserProfile = ({ profile }) => {
           {profile.lastLogin && (
             <span>Last login: {formatDate(profile.lastLogin)}</span>
           )}
-        </div>
-
-        <div className="user-stats">
-          {/* These stats would typically come from the backend */}
-          <div className="stat-item">
-            <span className="stat-value">15</span>
-            <span className="stat-label">Poems</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">127</span>
-            <span className="stat-label">Comments</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">243</span>
-            <span className="stat-label">Likes</span>
-          </div>
         </div>
       </div>
 

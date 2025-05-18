@@ -14,16 +14,13 @@ namespace API.User.Controllers
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileService _profileService;
-        private readonly IProfileImageService _profileImageService;
         private readonly ILogger<UserProfileController> _logger;
 
         public UserProfileController(
             IUserProfileService profileService,
-            IProfileImageService profileImageService,
             ILogger<UserProfileController> logger)
         {
             _profileService = profileService;
-            _profileImageService = profileImageService;
             _logger = logger;
         }
 
@@ -62,49 +59,8 @@ namespace API.User.Controllers
             return Ok(new { message = "Password changed successfully" });
         }
 
-        [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadProfileImage(IFormFile image)
-        {
-            if (image == null || image.Length == 0)
-                return BadRequest(new { message = "No image provided" });
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            using (var stream = image.OpenReadStream())
-            {
-                var imageUrl = await _profileImageService.SaveProfileImageAsync(userId, stream);
-                return Ok(new { imageUrl });
-            }
-        }
-
-        [HttpGet("image/{userId}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetProfileImage(string userId)
-        {
-            try
-            {
-                var (imageData, contentType) = await _profileImageService.GetProfileImageAsync(userId);
-
-                if (imageData == null || contentType == null)
-                {
-                    // Логирование для диагностики
-                    _logger.LogWarning($"Image not found for user {userId}");
-
-                    // Возвращаем стандартное изображение или 404
-                    return NotFound();
-                }
-
-                // Логирование для диагностики
-                _logger.LogInformation($"Returning image for user {userId}, content type: {contentType}, size: {imageData.Length} bytes");
-
-                return File(imageData, contentType);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error retrieving image for user {userId}");
-                return StatusCode(500, "Internal server error retrieving image");
-            }
-        }
+     
 
         [HttpGet("activity")]
         public async Task<IActionResult> GetUserActivity([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
